@@ -8,6 +8,7 @@ import { Reward, RewardSchema } from '@libs/database/schemas/reward.schema';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Event } from '../../../libs/database/src/schemas/event.schema';
 
 @Module({
     imports: [
@@ -30,4 +31,4 @@ import { MongooseModule } from '@nestjs/mongoose';
         ]),
     ],
 })
-export class AppModule {}
+export class EventModule {}

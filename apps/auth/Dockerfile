@@ -1,11 +1,9 @@
 FROM node:18
-
 WORKDIR /app
 
 COPY . .
 
-RUN npm install
-
-RUN npm run build auth
+RUN yarn install
+RUN yarn build:auth
 
 CMD ["node", "dist/apps/auth/main"]

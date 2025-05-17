@@ -21,4 +21,4 @@ import { MongooseModule } from '@nestjs/mongoose';
         MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
     ],
 })
-export class AppModule {}
+export class AuthModule {}
