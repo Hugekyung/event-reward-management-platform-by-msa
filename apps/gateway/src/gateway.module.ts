@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { ProxyModule } from './proxy/proxy.module';
 
 @Module({
-    imports: [],
+    imports: [ProxyModule],
     controllers: [],
     providers: [],
 })
