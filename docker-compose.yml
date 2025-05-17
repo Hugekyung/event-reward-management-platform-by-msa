@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+    # GATEWAY
+    gateway:
+        build:
+            context: .
+            dockerfile: ./apps/gateway/Dockerfile
+        ports:
+            - '3000:3000'
+        depends_on:
+            - auth
+            - event
+
+    # AUTH SERVICE
+    auth:
+        build:
+            context: .
+            dockerfile: ./apps/auth/Dockerfile
+        ports:
+            - '3001:3001'
+        env_file:
+            - ./apps/auth/.env
+        depends_on:
+            - auth-mongo
+
+    auth-mongo:
+        image: mongo
+        container_name: auth-mongo
+        ports:
+            - '27017:27017'
+        volumes:
+            - auth_data:/data/db
+
+    # EVENT SERVICE
+    event:
+        build:
+            context: .
+            dockerfile: ./apps/event/Dockerfile
+        ports:
+            - '3002:3002'
+        env_file:
+            - ./apps/event/.env
+        depends_on:
+            - event-mongo
+
+    event-mongo:
+        image: mongo
+        container_name: event-mongo
+        ports:
+            - '27018:27017'
+        volumes:
+            - event_data:/data/db
+
+volumes:
+    auth_data:
+    event_data:
