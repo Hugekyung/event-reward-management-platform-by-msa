@@ -6,7 +6,7 @@ import { ProxyService } from './proxy.service';
 export class ProxyController {
     constructor(private readonly proxyService: ProxyService) {}
 
-    @All('*')
+    @All()
     async handleRequest(@Req() request: Request, @Res() response: Response) {
         return this.proxyService.forwardRequest(request, response);
     }

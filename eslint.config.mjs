@@ -27,14 +27,15 @@ export default tseslint.config(
     },
     {
         rules: {
-            'prettier/prettier': [
-                'error',
-                { singleQuote: true, trailingComma: 'all', tabWidth: 4 },
-                { endOfLine: 'auto' },
-            ],
-            '@typescript-eslint/no-explicit-any': 'off',
+            'prettier/prettier': 'error',
+            '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-floating-promises': 'warn',
             '@typescript-eslint/no-unsafe-argument': 'warn',
+            '@typescript-eslint/explicit-module-boundary-types': 'warn',
+            '@typescript-eslint/no-misused-promises': 'error',
+            '@typescript-eslint/strict-boolean-expressions': 'warn',
+            '@typescript-eslint/prefer-optional-chain': 'warn',
+            '@typescript-eslint/consistent-type-imports': 'error',
         },
     },
 );
