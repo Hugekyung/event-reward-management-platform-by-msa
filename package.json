@@ -21,15 +21,17 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
-    "@nestjs/core": "^11.0.1",
+    "@nestjs/core": "^10.4.1",
+    "@nestjs/mongoose": "^11.0.3",
     "@nestjs/platform-express": "^11.0.1",
+    "mongoose": "^8.15.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
-    "@nestjs/cli": "^11.0.0",
+    "@nestjs/cli": "10.4.1",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
     "@swc/cli": "^0.6.0",
@@ -70,8 +72,15 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/apps/"
-    ]
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@libs/database(|/.*)$": "<rootDir>/libs/database/src/$1"
+    }
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "volta": {
+    "node": "18.20.8"
+  }
 }
