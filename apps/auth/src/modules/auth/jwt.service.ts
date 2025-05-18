@@ -1,49 +1,59 @@
-import { IUser } from '@libs/database/interface/user.interface';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { IUserWithId } from '@libs/database/interface/user.interface';
+import { IRedisService } from '@libs/redis/redis-service.interface';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
+import { RedisServiceToken } from '../../common/constants/token.constants';
 import { JwtPayload } from '../../common/interface/jwt-payload.interface';
 import { IJwtService } from '../../common/interface/jwt-service.interface';
 
 @Injectable()
 export class JwtService implements IJwtService {
-    constructor() {}
+    constructor(
+        @Inject(RedisServiceToken)
+        private readonly redis: IRedisService,
+    ) {}
+
+    private readonly accessSecret = process.env.JWT_SECRET!;
+    private readonly refreshSecret = process.env.JWT_REFRESH_SECRET!;
+    private readonly refreshTTL = 60 * 60 * 24 * 7; // 7일
 
     sign(payload: object, options?: jwt.SignOptions): string {
-        return jwt.sign(payload, process.env.JWT_SECRET!, options);
+        return jwt.sign(payload, this.accessSecret, options);
     }
 
     verify(
         token: string,
         options?: jwt.VerifyOptions & { secret?: string },
     ): JwtPayload {
-        const secret = options?.secret || process.env.JWT_SECRET!;
+        const secret = options?.secret || this.accessSecret;
         return jwt.verify(token, secret) as JwtPayload;
     }
 
-    issueTokens(user: IUser): { accessToken: string; refreshToken: string } {
+    issueTokens(user: IUserWithId): {
+        accessToken: string;
+        refreshToken: string;
+    } {
         const accessToken = jwt.sign(
-            { sub: user.id, role: user.role },
+            { sub: user._id, role: user.role },
+            this.accessSecret,
             { expiresIn: '15m' },
         );
 
-        const refreshToken = jwt.sign(
-            { sub: user.id },
-            { expiresIn: '7d', secret: process.env.JWT_REFRESH_SECRET },
-        );
+        const refreshToken = jwt.sign({ sub: user._id }, this.refreshSecret, {
+            expiresIn: '7d',
+        });
 
         return { accessToken, refreshToken };
     }
 
     async storeRefreshToken(userId: string, token: string): Promise<void> {
         await this.redis.set(`refresh:${userId}`, token, {
-            EX: 60 * 60 * 24 * 7,
+            EX: this.refreshTTL,
         });
     }
 
     verifyRefreshToken(token: string): JwtPayload {
-        return jwt.verify(token, {
-            secret: process.env.JWT_REFRESH_SECRET,
-        });
+        return jwt.verify(token, this.refreshSecret) as JwtPayload;
     }
 
     async validateRefreshToken(

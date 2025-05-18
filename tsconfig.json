@@ -18,10 +18,12 @@
         "strictBindCallApply": false,
         "noFallthroughCasesInSwitch": false,
         "paths": {
+            "@libs/database": ["libs/database/src"],
+            "@libs/database/*": ["libs/database/src/*"],
             "@libs/enum": ["libs/enum/src"],
             "@libs/enum/*": ["libs/enum/src/*"],
-            "@libs/database": ["libs/database/src"],
-            "@libs/database/*": ["libs/database/src/*"]
+            "@libs/redis": ["libs/redis/src"],
+            "@libs/redis/*": ["libs/redis/src/*"]
         }
     }
 }

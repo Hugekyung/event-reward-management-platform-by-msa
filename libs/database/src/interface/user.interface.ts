@@ -6,3 +6,7 @@ export interface IUser {
     refreshToken?: string;
     deletedAt?: Date;
 }
+
+export interface IUserWithId extends IUser {
+    _id: string;
+}
