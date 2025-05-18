@@ -1,6 +1,8 @@
+import { CreateAdminUserDto } from '../../modules/user/dto/create-admin-user.dto';
 import { CreateUserDto } from '../../modules/user/dto/create-user.dto';
-import { UserResponseDto } from '../../modules/user/dto/user-response.dto';
 
 export interface IUserService {
-    createUser(dto: CreateUserDto): Promise<UserResponseDto>;
+    createUser(
+        createUserDto: CreateUserDto | CreateAdminUserDto,
+    ): Promise<void>;
 }

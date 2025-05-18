@@ -1,9 +1,9 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserServiceToken } from '../../common/constants/token.constants';
 import { IUserService } from '../../common/interface/user-service.interface';
+import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -13,7 +13,16 @@ export class UserController implements IUserService {
     ) {}
 
     @Post('register')
-    async createUser(@Body() dto: CreateUserDto): Promise<UserResponseDto> {
-        return this.userService.createUser(dto);
+    @ApiOperation({ summary: '일반 유저 등록' })
+    async createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
+        await this.userService.createUser(createUserDto);
+    }
+
+    @Post('register-admin')
+    @ApiOperation({ summary: '관리자 유저 등록' })
+    async createAdminUser(
+        @Body() createAdminUserDto: CreateAdminUserDto,
+    ): Promise<void> {
+        await this.userService.createUser(createAdminUserDto);
     }
 }

@@ -4,6 +4,7 @@ import {
     UserRepositoryToken,
 } from '../../common/constants/token.constants';
 import { IAuthService } from '../../common/interface/auth.service.interface';
+import { JwtPayload } from '../../common/interface/jwt-payload.interface';
 import { IJwtService } from '../../common/interface/jwt-service.interface';
 import { IUserRepository } from '../../common/interface/user.repository.interface';
 import { PasswordUtil } from '../../common/utils/password.util';
@@ -19,7 +20,7 @@ export class AuthService implements IAuthService {
     ) {}
 
     async login(dto: LoginUserDto): Promise<TokenResponseDto> {
-        const user = await this.userRepo.findByEmail(dto.email);
+        const user = await this.userRepository.findByEmail(dto.email);
         if (
             !user ||
             !(await PasswordUtil.verify(dto.password, user.password))
@@ -27,20 +28,20 @@ export class AuthService implements IAuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        const { accessToken, refreshToken } =
-            await this.jwtService.issueTokens(user);
-        await this.jwtService.storeRefreshToken(user.id, refreshToken);
+        const { accessToken, refreshToken } = this.jwtService.issueTokens(user);
+        await this.jwtService.storeRefreshToken(user._id, refreshToken);
 
         return { accessToken, refreshToken };
     }
 
     async refreshToken(refreshToken: string): Promise<TokenResponseDto> {
-        const payload = this.jwtService.verifyRefreshToken(refreshToken);
+        const payload: JwtPayload =
+            this.jwtService.verifyRefreshToken(refreshToken);
         await this.jwtService.validateRefreshToken(payload.sub, refreshToken);
 
-        const user = await this.userRepo.findById(payload.sub);
-        const tokens = await this.jwtService.issueTokens(user);
-        await this.jwtService.storeRefreshToken(user.id, tokens.refreshToken);
+        const user = await this.userRepository.findById(payload.sub);
+        const tokens = this.jwtService.issueTokens(user);
+        await this.jwtService.storeRefreshToken(user._id, tokens.refreshToken);
         return tokens;
     }
 }
