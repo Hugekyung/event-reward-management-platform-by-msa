@@ -4,9 +4,9 @@ import { resolve } from 'path';
 import { JwtAuthGuard } from './auth/jwt/jwt-auth.guard';
 import { JwtStrategy } from './auth/jwt/jwt.strategy';
 import { RolesGuard } from './auth/role/role.guard';
-import { ProxyController } from './proxy/proxy.controller';
-import { ProxyModule } from './proxy/proxy.module';
-import { ProxyService } from './proxy/proxy.service';
+import { ProxyController } from './modules/proxy/proxy.controller';
+import { ProxyModule } from './modules/proxy/proxy.module';
+import { ProxyService } from './modules/proxy/proxy.service';
 
 @Module({
     imports: [
