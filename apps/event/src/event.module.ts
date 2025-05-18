@@ -9,6 +9,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Event } from '../../../libs/database/src/schemas/event.schema';
+import { EventModule } from './modules/event/event.module';
+import { RewardHistoryService } from './modules/reward/reward-history.service';
+import { RewardModule } from './modules/reward/reward.module';
 
 @Module({
     imports: [
@@ -29,6 +32,9 @@ import { Event } from '../../../libs/database/src/schemas/event.schema';
             { name: Reward.name, schema: RewardSchema },
             { name: RewardHistory.name, schema: RewardHistorySchema },
         ]),
+        EventModule,
+        RewardModule,
     ],
+    providers: [RewardHistoryService],
 })
 export class EventModule {}

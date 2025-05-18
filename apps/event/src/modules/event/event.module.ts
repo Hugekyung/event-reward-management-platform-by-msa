@@ -1,0 +1,24 @@
+import { Module } from '@nestjs/common';
+import {
+    EventRepositoryToken,
+    EventServiceToken,
+} from '../../common/constants/token.constants';
+import { EventController } from './event.controller';
+import { EventRepository } from './event.repository';
+import { EventService } from './event.service';
+
+@Module({
+    controllers: [EventController],
+    providers: [
+        EventService,
+        {
+            provide: EventServiceToken,
+            useClass: EventService,
+        },
+        {
+            provide: EventRepositoryToken,
+            useClass: EventRepository,
+        },
+    ],
+})
+export class EventModule {}
