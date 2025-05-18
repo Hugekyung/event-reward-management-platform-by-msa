@@ -1,7 +1,7 @@
+import { UserRole } from '@libs/enum/user-role.enum';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { UserRole } from '../../common/enum/user-role.enum';
 import { JwtPayload } from '../../common/interface/jwt-payload.interface';
 import { ROLES_KEY } from './role.decorator';
 
@@ -12,7 +12,7 @@ export class RolesGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean {
         const request: Request = context.switchToHttp().getRequest();
         const path = request.path;
-        if (path === '/api/auth/login' || path === '/api/auth/register') {
+        if (path === '/api/auth/login' || path === '/api/user/register') {
             return true;
         }
 

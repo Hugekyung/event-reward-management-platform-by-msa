@@ -1,11 +1,10 @@
+const routeMap = [
+    { prefix: '/api/auth', target: 'http://auth:3001' },
+    { prefix: '/api/user', target: 'http://auth:3001' },
+    { prefix: '/api/event', target: 'http://event:3002' },
+];
+
 export const mappingTargetAPI = (path: string): string => {
-    if (path.startsWith('/api/auth')) {
-        return 'http://auth:3001';
-    }
-
-    if (path.startsWith('/api/event')) {
-        return 'http://event:3002';
-    }
-
-    return 'http://default';
+    const route = routeMap.find((r) => path.startsWith(r.prefix));
+    return route?.target || 'http://default';
 };

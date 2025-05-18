@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { UserRole } from '../../../common/enum/user-role.enum';
+import { UserRole } from '../../../../../../libs/enum/src/user-role.enum';
 import type { JwtPayload } from '../../../common/interface/jwt-payload.interface';
 import { JwtStrategy } from '../jwt.strategy';
 
