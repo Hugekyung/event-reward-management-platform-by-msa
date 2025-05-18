@@ -16,7 +16,8 @@ export class AuthService implements IAuthService {
     constructor(
         @Inject(UserRepositoryToken)
         private readonly userRepository: IUserRepository,
-        @Inject(JwtServiceToken) private readonly jwtService: IJwtService,
+        @Inject(JwtServiceToken)
+        private readonly jwtService: IJwtService,
     ) {}
 
     async login(dto: LoginUserDto): Promise<TokenResponseDto> {

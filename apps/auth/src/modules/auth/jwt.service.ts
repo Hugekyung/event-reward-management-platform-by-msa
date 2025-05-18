@@ -21,10 +21,6 @@ export class JwtService implements IJwtService {
         this.refreshSecret = this.config.get<string>('JWT_REFRESH_SECRET')!;
     }
 
-    sign(payload: object, options?: jwt.SignOptions): string {
-        return jwt.sign(payload, this.accessSecret, options);
-    }
-
     verify(
         token: string,
         options?: jwt.VerifyOptions & { secret?: string },
@@ -64,9 +60,11 @@ export class JwtService implements IJwtService {
         userId: string,
         givenToken: string,
     ): Promise<void> {
-        const stored = await this.redis.get(`refresh:${userId}`);
-        if (stored !== givenToken) {
-            throw new UnauthorizedException('유효하지 않은 토큰입니다.');
+        const storedRefreshToken = await this.redis.get(`refresh:${userId}`);
+        if (storedRefreshToken !== givenToken) {
+            throw new UnauthorizedException(
+                '유효하지 않은 Refresh 토큰입니다.',
+            );
         }
     }
 }
