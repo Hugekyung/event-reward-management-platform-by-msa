@@ -13,7 +13,7 @@ export class UserRepository implements IUserRepository {
         private readonly userModel: Model<UserDocument>,
     ) {}
 
-    async findByEmail(email: string): Promise<Partial<IUserWithId>> {
+    async findByEmail(email: string): Promise<IUserWithId> {
         const user = await this.userModel.findOne({ email }).lean();
         if (!user) {
             throw new Error('해당 이메일을 가진 유저 정보가 없습니다.');
@@ -22,7 +22,7 @@ export class UserRepository implements IUserRepository {
         return toUserResponseDto(user);
     }
 
-    async findById(id: string): Promise<Partial<IUserWithId>> {
+    async findById(id: string): Promise<IUserWithId> {
         const user = await this.userModel.findById(id).lean();
         if (!user) {
             throw new Error('해당 _id를 가진 유저 정보가 없습니다.');
