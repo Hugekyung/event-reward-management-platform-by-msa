@@ -3,7 +3,7 @@ import type { ValidationError } from '@nestjs/common';
 import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './auth.module';
+import { AppModule } from './app.module';
 import { IndexModule } from './modules/index.module';
 
 async function bootstrap() {

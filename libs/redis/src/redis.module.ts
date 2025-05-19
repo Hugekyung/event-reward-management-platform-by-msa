@@ -11,7 +11,7 @@ import { RedisService } from './redis.service';
         IoRedisModule.forRootAsync({
             useFactory: (config: ConfigService): RedisModuleOptions => ({
                 type: 'single',
-                url: `redis://${config.get('REDIS_HOST')}:${Number(config.get('REDIS_PORT'))}`,
+                url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
             }),
             inject: [ConfigService],
         }),

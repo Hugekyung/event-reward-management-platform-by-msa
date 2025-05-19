@@ -20,8 +20,12 @@ services:
             - '3001:3001'
         env_file:
             - ./apps/auth/.env
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
         depends_on:
             - auth-mongo
+            - redis
 
     auth-mongo:
         image: mongo
@@ -40,8 +44,12 @@ services:
             - '3002:3002'
         env_file:
             - ./apps/event/.env
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
         depends_on:
             - event-mongo
+            - redis
 
     event-mongo:
         image: mongo

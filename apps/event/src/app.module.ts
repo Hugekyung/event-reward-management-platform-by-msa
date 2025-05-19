@@ -1,5 +1,17 @@
 import { getMongoUri } from '@libs/database/config/db.config';
-import { EventSchema } from '@libs/database/schemas/event.schema';
+import {
+    EventRewardMapping,
+    EventRewardMappingSchema,
+} from '@libs/database/schemas/event-reward-mapping.schema';
+import { Event, EventSchema } from '@libs/database/schemas/event.schema';
+import {
+    ItemReward,
+    ItemRewardSchema,
+} from '@libs/database/schemas/item-reward.schema';
+import {
+    PointReward,
+    PointRewardSchema,
+} from '@libs/database/schemas/point-reward.schema';
 import {
     RewardHistory,
     RewardHistorySchema,
@@ -9,7 +21,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { resolve } from 'path';
-import { Event } from '../../../libs/database/src/schemas/event.schema';
 import { EventModule } from './modules/event/event.module';
 import { RewardModule } from './modules/reward/reward.module';
 
@@ -36,6 +47,9 @@ import { RewardModule } from './modules/reward/reward.module';
             { name: Event.name, schema: EventSchema },
             { name: Reward.name, schema: RewardSchema },
             { name: RewardHistory.name, schema: RewardHistorySchema },
+            { name: EventRewardMapping.name, schema: EventRewardMappingSchema },
+            { name: ItemReward.name, schema: ItemRewardSchema },
+            { name: PointReward.name, schema: PointRewardSchema },
         ]),
         EventModule,
         RewardModule,
