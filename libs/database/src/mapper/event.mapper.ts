@@ -8,6 +8,7 @@ export function toEventResponseDto(event: any): IEventWithId {
         startDate: event.startDate,
         endDate: event.endDate,
         isActive: event.isActive,
+        type: event.type,
         conditions: event.conditions,
         rewards: event.rewards,
         createdBy: event.createdBy,

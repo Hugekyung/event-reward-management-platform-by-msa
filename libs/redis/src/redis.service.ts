@@ -1,9 +1,7 @@
-import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
+import { RedisKeyPrefix } from '@libs/enum/redis-key-prefix.enum';
+import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
-
-export enum RedisKeyPrefix {
-    REFRESH = 'refresh:',
-}
+import type { Redis } from 'ioredis';
 
 @Injectable()
 export class RedisService {
@@ -18,12 +16,29 @@ export class RedisService {
         prefix: RedisKeyPrefix,
         key: string,
         value: any,
-        ttl: number = 60 * 60 * 24 * 7, // 기본 7일
+        ttl: number = 60 * 60 * 24 * 7,
     ): Promise<void> {
         await this.redis.set(prefix + key, JSON.stringify(value), 'EX', ttl);
     }
 
+    async setIfNotExists(
+        key: string,
+        value: string,
+        ttl: number,
+    ): Promise<boolean> {
+        const result = await this.redis.set(
+            key,
+            value,
+            ...(['NX', 'EX', ttl] as any[]),
+        );
+        return result === 'OK';
+    }
+
     async del(prefix: RedisKeyPrefix, key: string): Promise<void> {
         await this.redis.del(prefix + key);
+    }
+
+    async delRaw(fullKey: string): Promise<void> {
+        await this.redis.del(fullKey);
     }
 }

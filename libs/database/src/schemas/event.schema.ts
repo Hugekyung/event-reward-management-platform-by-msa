@@ -34,9 +34,6 @@ export class Event {
         description: string;
     };
 
-    @Prop({ type: [Types.ObjectId], ref: 'Reward' })
-    rewards: Types.ObjectId[];
-
     @Prop({ type: Types.ObjectId, ref: 'User' })
     createdBy: Types.ObjectId;
 }

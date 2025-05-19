@@ -15,7 +15,7 @@ export class RewardHistory {
     rewardId: Types.ObjectId;
 
     @Prop({ enum: ['SUCCESS', 'FAILED'] })
-    status: string;
+    status: 'SUCCESS' | 'FAILED';
 
     @Prop()
     reason?: string;
@@ -25,3 +25,7 @@ export class RewardHistory {
 }
 
 export const RewardHistorySchema = SchemaFactory.createForClass(RewardHistory);
+RewardHistorySchema.index(
+    { userId: 1, eventId: 1, rewardId: 1 },
+    { unique: true },
+);
