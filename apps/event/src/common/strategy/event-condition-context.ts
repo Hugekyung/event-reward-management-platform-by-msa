@@ -8,10 +8,10 @@ import { ObjectUpgradeStrategy } from './upgrade-event.strategy';
 
 export class EventConditionContext {
     private static strategyMap: Record<EventType, IEventConditionStrategy> = {
-        [EventType.ATTENDANCE]: new AttendanceStrategy(),
-        [EventType.INVITE]: new InviteFriendStrategy(),
-        [EventType.QUEST]: new DailyQuestStrategy(),
-        [EventType.UPGRADE]: new ObjectUpgradeStrategy(),
+        [EventType.LOGIN_FIRST_TIME]: new AttendanceStrategy(),
+        [EventType.INVITE_FRIEND]: new InviteFriendStrategy(),
+        [EventType.DAILY_QUEST]: new DailyQuestStrategy(),
+        [EventType.OBJECT_UPGRADE]: new ObjectUpgradeStrategy(),
     };
 
     static validate(type: EventType, config: Record<string, any>) {

@@ -11,7 +11,7 @@ export class ClaimRewardDto {
     @ApiProperty({
         description: '이벤트 유형',
         enum: EventType,
-        example: EventType.ATTENDANCE,
+        example: EventType.LOGIN_FIRST_TIME,
     })
     @IsNotEmpty()
     @IsEnum(EventType)

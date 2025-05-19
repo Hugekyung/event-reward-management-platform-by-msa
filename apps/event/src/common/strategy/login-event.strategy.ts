@@ -5,18 +5,12 @@ import { IUserLogRepository } from '../interface/user-log-repository.interface';
 export class AttendanceStrategy implements IEventConditionStrategy {
     constructor(private readonly userLogRepository: IUserLogRepository) {}
 
-    async validateLogin7Days(
-        userId: string,
-        config: Record<string, any>,
-    ): Promise<void> {
-        const targetCount = config.targetCount ?? 7;
-        const logs = await this.userLogRepository.findRecentLoginDates(
-            userId,
-            targetCount,
-        );
-        if (logs.length < targetCount) {
+    async validate(userId: string, config: Record<string, any>): Promise<void> {
+        const hasLoggedIn =
+            await this.userLogRepository.hasLoggedInBefore(userId);
+        if (!hasLoggedIn) {
             throw new BadRequestException(
-                `최근 ${targetCount}일 간 로그인 기록이 부족합니다.`,
+                '첫 로그인한 유저만 보상을 받을 수 있습니다.',
             );
         }
     }

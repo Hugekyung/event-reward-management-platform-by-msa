@@ -11,10 +11,12 @@ import {
 } from '@nestjs/common';
 import {
     EventRepositoryToken,
+    EventRewardMappingRepositoryToken,
     RewardHistoryRepositoryToken,
     RewardRepositoryToken,
 } from '../../common/constants/token.constants';
 import { IEventRepository } from '../../common/interface/event-repository.interface';
+import { IEventRewardMappingRepository } from '../../common/interface/event-reward-mapping-repository.interface';
 import { IRewardHistoryRepository } from '../../common/interface/reward-history-repository.interface';
 import { IRewardRepository } from '../../common/interface/reward-repository.interface';
 import { IRewardService } from '../../common/interface/reward-service.interface';
@@ -32,6 +34,8 @@ export class RewardService implements IRewardService {
         private readonly eventRepository: IEventRepository,
         @Inject(RewardHistoryRepositoryToken)
         private readonly rewardHistoryRepository: IRewardHistoryRepository,
+        @Inject(EventRewardMappingRepositoryToken)
+        private readonly eventRewardMappingRepository: IEventRewardMappingRepository,
     ) {}
 
     async createReward(dto: CreateRewardDto): Promise<IRewardWithId> {
@@ -75,7 +79,7 @@ export class RewardService implements IRewardService {
             throw err;
         }
 
-        // ✅ 보상 조회
+        // * 보상 조회
         const reward = await this.rewardRepository.findByEventId(eventId);
         if (!reward) {
             const reason = '이벤트에 연결된 보상이 없습니다.';
@@ -90,13 +94,19 @@ export class RewardService implements IRewardService {
             );
         }
 
-        // ✅ 보상 히스토리 저장
+        // * 보상 히스토리 저장
         const rewardHistoryObject = RewardHistoryFactory.createSuccess(
             userId,
             eventId,
             reward._id.toString(), // ! id 타입 일치시키기
         );
         await this.rewardHistoryRepository.create(rewardHistoryObject);
+
+        // * 보상 수량 증가
+        await this.eventRewardMappingRepository.increaseQuantity(
+            eventId,
+            reward._id.toString(), // ! id 타입 일치시키기
+        );
 
         // ! return 추가하기
     }

@@ -36,7 +36,7 @@ export class RewardHistoryRepository implements IRewardHistoryRepository {
     }
 
     async create(rewardHistoryObject): Promise<IRewardHistoryWithId> {
-        const histories = await this.model.create(history);
+        const histories = await this.model.create(rewardHistoryObject);
         return toRewardHistoryResponseDto(histories);
     }
 }
