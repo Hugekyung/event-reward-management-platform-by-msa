@@ -6,4 +6,4 @@ COPY . .
 RUN yarn install
 RUN yarn build:gateway
 
-CMD ["node", "dist/apps/gateway/main"]
+CMD ["node", "dist/apps/gateway/src/main.js"]

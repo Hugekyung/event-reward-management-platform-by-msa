@@ -6,4 +6,4 @@ COPY . .
 RUN yarn install
 RUN yarn build:auth
 
-CMD ["node", "dist/apps/auth/main"]
+CMD ["node", "dist/apps/auth/src/main.js"]

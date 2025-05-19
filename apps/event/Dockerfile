@@ -6,4 +6,4 @@ COPY . .
 RUN yarn install
 RUN yarn build:event
 
-CMD ["node", "dist/apps/event/main"]
+CMD ["node", "dist/apps/event/src/main.js"]
