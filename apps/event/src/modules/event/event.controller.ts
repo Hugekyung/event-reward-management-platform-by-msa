@@ -1,3 +1,4 @@
+import { IEventWithId } from '@libs/database/interface/event.interface';
 import { UserRole } from '@libs/enum/user-role.enum';
 import {
     Body,
@@ -8,12 +9,14 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { EventServiceToken } from '../../common/constants/token.constants';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { IEventService } from '../../common/interface/event-service.interface';
 import { CreateEventDto } from './dto/create-event.dto';
 
+@ApiTags('Event')
 @Controller('events')
 @UseGuards(RolesGuard)
 export class EventController {
@@ -23,17 +26,24 @@ export class EventController {
 
     @Post()
     @Roles(UserRole.OPERATOR, UserRole.ADMIN)
-    create(@Body() dto: CreateEventDto): Promise<Event> {
-        return this.eventService.createEvent(dto);
+    @ApiOperation({
+        summary: '신규 이벤트 등록(OPERATOR, ADMIN 관리자만 요청 가능)',
+    })
+    async create(
+        @Body() createEventDto: CreateEventDto,
+    ): Promise<IEventWithId> {
+        return await this.eventService.createEvent(createEventDto);
     }
 
     @Get()
-    findAll(): Promise<Event[]> {
-        return this.eventService.findAllEvents();
+    @ApiOperation({ summary: '이벤트 목록 조회' })
+    async findAll(): Promise<IEventWithId[]> {
+        return await this.eventService.findAllEvents();
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string): Promise<Event> {
-        return this.eventService.findEventById(id);
+    @Get(':eventId')
+    @ApiOperation({ summary: '이벤트 상세 조회' })
+    async findOne(@Param('eventId') eventId: string): Promise<IEventWithId> {
+        return await this.eventService.findEventById(eventId);
     }
 }

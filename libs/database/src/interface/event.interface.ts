@@ -1,4 +1,3 @@
-// 📁 libs/database/interface/event.interface.ts
 import { Types } from 'mongoose';
 
 export interface IEvent {

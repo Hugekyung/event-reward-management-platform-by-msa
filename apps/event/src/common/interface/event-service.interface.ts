@@ -1,8 +1,8 @@
-import { CreateEventDto } from '../dto/create-event.dto';
-import { Event } from '../schema/event.schema';
+import { IEventWithId } from '@libs/database/interface/event.interface';
+import { CreateEventDto } from '../../modules/event/dto/create-event.dto';
 
 export interface IEventService {
-    createEvent(dto: CreateEventDto): Promise<Event>;
-    findAllEvents(): Promise<Event[]>;
-    findEventById(id: string): Promise<Event>;
+    createEvent(createEventDto: CreateEventDto): Promise<IEventWithId>;
+    findAllEvents(): Promise<IEventWithId[]>;
+    findEventById(eventId: string): Promise<IEventWithId>;
 }

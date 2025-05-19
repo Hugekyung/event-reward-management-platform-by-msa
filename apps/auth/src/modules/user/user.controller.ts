@@ -6,7 +6,7 @@ import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 
 @ApiTags('User')
-@Controller('user')
+@Controller('users')
 export class UserController implements IUserService {
     constructor(
         @Inject(UserServiceToken) private readonly userService: IUserService,
