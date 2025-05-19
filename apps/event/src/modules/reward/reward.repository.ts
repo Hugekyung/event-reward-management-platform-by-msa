@@ -39,4 +39,9 @@ export class RewardRepository implements IRewardRepository {
         const reward = await this.rewardModel.findById(rewardId).lean();
         return toRewardResponseDto(reward);
     }
+
+    async findByEventId(eventId: string): Promise<IRewardWithId | null> {
+        const reward = await this.rewardModel.findOne({ eventId }).lean();
+        return toRewardResponseDto(reward);
+    }
 }

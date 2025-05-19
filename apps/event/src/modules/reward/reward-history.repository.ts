@@ -1,5 +1,8 @@
 import { IRewardHistoryWithId } from '@libs/database/interface/reward-history.interface';
-import { toRewardHistoriesResponseDto } from '@libs/database/mapper/reward-history.mapper';
+import {
+    toRewardHistoriesResponseDto,
+    toRewardHistoryResponseDto,
+} from '@libs/database/mapper/reward-history.mapper';
 import {
     RewardHistory,
     RewardHistoryDocument,
@@ -30,5 +33,10 @@ export class RewardHistoryRepository implements IRewardHistoryRepository {
 
     async count(query: Record<string, any>): Promise<number> {
         return await this.model.countDocuments(query);
+    }
+
+    async create(rewardHistoryObject): Promise<IRewardHistoryWithId> {
+        const histories = await this.model.create(history);
+        return toRewardHistoryResponseDto(histories);
     }
 }

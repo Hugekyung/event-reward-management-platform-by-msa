@@ -7,7 +7,7 @@ export class RewardHistoryFilterDto {
     @ApiPropertyOptional({ description: '이벤트 ID' })
     @IsOptional()
     @IsMongoId()
-    eventId?: string;
+    eventId?: string; // ! 이벤트 종류별 조건으로 바꿔야 함
 
     @ApiPropertyOptional({ description: '보상 상태 (SUCCESS, FAILED)' })
     @IsOptional()

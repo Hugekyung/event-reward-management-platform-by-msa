@@ -8,6 +8,7 @@ import {
     Param,
     Post,
     Query,
+    UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'libs/shared/get-user.decorator';
@@ -16,8 +17,10 @@ import {
     RewardServiceToken,
 } from '../../common/constants/token.constants';
 import { Roles } from '../../common/decorators/role.decorator';
+import { RewardIdempotencyInterceptor } from '../../common/interceptor/reward-idempotency.interceptor';
 import { IRewardHistoryService } from '../../common/interface/reward-history-service.interface';
 import { IRewardService } from '../../common/interface/reward-service.interface';
+import { ClaimRewardDto } from './dto/claim-reward.dto';
 import { CreateRewardDto } from './dto/create-reward.dto';
 import {
     AdminRewardHistoryFilterDto,
@@ -71,5 +74,20 @@ export class RewardController {
     @ApiOperation({ summary: '이벤트 보상 요청 내역 확인(관리자)' })
     getAllRewardHistories(@Query() filter: AdminRewardHistoryFilterDto) {
         return this.service.findHistories(null, 'ADMIN', filter);
+    }
+
+    @Post('claim')
+    // @UseGuards()
+    @UseInterceptors(RewardIdempotencyInterceptor)
+    @ApiOperation({ summary: '유저의 이벤트 보상 요청' })
+    async claimReward(
+        @GetUser() user: { _id: string; role: string },
+        @Body() dto: ClaimRewardDto,
+    ) {
+        return await this.rewardService.claimReward(
+            user._id,
+            dto.eventId,
+            dto.type,
+        );
     }
 }

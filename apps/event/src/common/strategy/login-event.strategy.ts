@@ -1,15 +1,23 @@
 import { BadRequestException } from '@nestjs/common';
-import { IEventConditionStrategy } from 'apps/event/src/common/strategy/event-condition.strategy';
+import { IEventConditionStrategy } from '../interface/event-condition-strategy.interface';
+import { IUserLogRepository } from '../interface/user-log-repository.interface';
 
-export class Login7DaysStrategy implements IEventConditionStrategy {
-    validate(config: Record<string, any>): void {
-        if (typeof config.targetCount !== 'number' || config.targetCount < 7) {
+export class AttendanceStrategy implements IEventConditionStrategy {
+    constructor(private readonly userLogRepository: IUserLogRepository) {}
+
+    async validateLogin7Days(
+        userId: string,
+        config: Record<string, any>,
+    ): Promise<void> {
+        const targetCount = config.targetCount ?? 7;
+        const logs = await this.userLogRepository.findRecentLoginDates(
+            userId,
+            targetCount,
+        );
+        if (logs.length < targetCount) {
             throw new BadRequestException(
-                '출석 이벤트는 최소 7일 이상이어야 합니다.',
+                `최근 ${targetCount}일 간 로그인 기록이 부족합니다.`,
             );
-        }
-        if (config.unit !== 'days') {
-            throw new BadRequestException('출석 단위는 days여야 합니다.');
         }
     }
 }

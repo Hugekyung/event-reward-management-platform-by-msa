@@ -9,11 +9,13 @@ import { Reward, RewardSchema } from '@libs/database/schemas/reward.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
+    EventRepositoryToken,
     RewardHistoryRepositoryToken,
     RewardHistoryServiceToken,
     RewardRepositoryToken,
     RewardServiceToken,
 } from '../../common/constants/token.constants';
+import { EventRepository } from '../event/event.repository';
 import { RewardHistoryRepository } from './reward-history.repository';
 import { RewardHistoryService } from './reward-history.service';
 import { RewardController } from './reward.controller';
@@ -55,6 +57,10 @@ import { RewardService } from './reward.service';
         {
             provide: RewardHistoryRepositoryToken,
             useClass: RewardHistoryRepository,
+        },
+        {
+            provide: EventRepositoryToken,
+            useClass: EventRepository,
         },
     ],
 })

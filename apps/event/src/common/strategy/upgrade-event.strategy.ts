@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { IEventConditionStrategy } from './event-condition.strategy';
+import { IEventConditionStrategy } from '../interface/event-condition-strategy.interface';
 
 export class ObjectUpgradeStrategy implements IEventConditionStrategy {
     validate(config: Record<string, any>): void {

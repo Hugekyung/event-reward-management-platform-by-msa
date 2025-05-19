@@ -1,14 +1,14 @@
 import { EventType } from '@libs/enum/event-type.enum';
 import { BadRequestException } from '@nestjs/common';
+import { IEventConditionStrategy } from '../interface/event-condition-strategy.interface';
 import { DailyQuestStrategy } from './daily-quest-event.strategy';
-import { IEventConditionStrategy } from './event-condition.strategy';
 import { InviteFriendStrategy } from './invite-event.strategy';
-import { Login7DaysStrategy } from './login-event.strategy';
+import { AttendanceStrategy } from './login-event.strategy';
 import { ObjectUpgradeStrategy } from './upgrade-event.strategy';
 
 export class EventConditionContext {
     private static strategyMap: Record<EventType, IEventConditionStrategy> = {
-        [EventType.ATTENDANCE]: new Login7DaysStrategy(),
+        [EventType.ATTENDANCE]: new AttendanceStrategy(),
         [EventType.INVITE]: new InviteFriendStrategy(),
         [EventType.QUEST]: new DailyQuestStrategy(),
         [EventType.UPGRADE]: new ObjectUpgradeStrategy(),

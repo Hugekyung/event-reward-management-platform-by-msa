@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { IEventConditionStrategy } from 'apps/event/src/common/strategy/event-condition.strategy';
+import { IEventConditionStrategy } from '../interface/event-condition-strategy.interface';
 
 export class DailyQuestStrategy implements IEventConditionStrategy {
     validate(config: Record<string, any>): void {
