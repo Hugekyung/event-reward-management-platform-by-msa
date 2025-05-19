@@ -20,12 +20,12 @@ import { Roles } from '../../common/decorators/role.decorator';
 import { RewardIdempotencyInterceptor } from '../../common/interceptor/reward-idempotency.interceptor';
 import { IRewardHistoryService } from '../../common/interface/reward-history-service.interface';
 import { IRewardService } from '../../common/interface/reward-service.interface';
-import { ClaimRewardDto } from './dto/claim-reward.dto';
 import { CreateRewardDto } from './dto/create-reward.dto';
 import {
     AdminRewardHistoryFilterDto,
     RewardHistoryFilterDto,
 } from './dto/filter-reward-history.dto';
+import { RequestRewardDto } from './dto/request-reward.dto';
 
 @ApiTags('Reward')
 @Controller('rewards')
@@ -76,15 +76,15 @@ export class RewardController {
         return this.service.findHistories(null, 'ADMIN', filter);
     }
 
-    @Post('claim')
+    @Post('request')
     // @UseGuards()
     @UseInterceptors(RewardIdempotencyInterceptor)
     @ApiOperation({ summary: '유저의 이벤트 보상 요청' })
-    async claimReward(
+    async requestReward(
         @GetUser() user: { _id: string; role: string },
-        @Body() dto: ClaimRewardDto,
+        @Body() dto: RequestRewardDto,
     ) {
-        return await this.rewardService.claimReward(
+        return await this.rewardService.requestReward(
             user._id,
             dto.eventId,
             dto.type,

@@ -6,7 +6,7 @@ export interface IRewardService {
     createReward(dto: CreateRewardDto): Promise<IRewardWithId>;
     findAllRewards(): Promise<IRewardWithId[]>;
     findRewardById(rewardId: string): Promise<IRewardWithId | null>;
-    claimReward(
+    requestReward(
         userId: string,
         eventId: string,
         type: EventType,

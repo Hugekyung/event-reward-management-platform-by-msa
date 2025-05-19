@@ -24,7 +24,7 @@ export class RewardIdempotencyInterceptor implements NestInterceptor {
             throw new ConflictException('유저 정보가 없습니다.');
         }
 
-        // 🎯 요청에서 이벤트 ID, 보상 ID 추출 (body 기반)
+        // * 요청에서 이벤트 ID, 보상 ID 추출 (body 기반)
         const eventId: string = req.body?.eventId;
         const rewardId: string = req.body?.rewardId;
 
@@ -37,12 +37,12 @@ export class RewardIdempotencyInterceptor implements NestInterceptor {
         const key = `${RedisKeyPrefix.IDEMPOTENCY}:reward:${user.id}:${eventId}:${rewardId}`;
 
         // * 멱등키 체크
-        const isAlreadyClaimed = await this.redisService.setIfNotExists(
+        const isAlreadyRequested = await this.redisService.setIfNotExists(
             key,
             'PENDING',
             60,
         );
-        if (!isAlreadyClaimed) {
+        if (!isAlreadyRequested) {
             throw new ConflictException(
                 '이미 보상 처리 중이거나 완료되었습니다.',
             );

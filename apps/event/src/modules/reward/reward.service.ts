@@ -51,7 +51,7 @@ export class RewardService implements IRewardService {
         return await this.rewardRepository.findById(rewardId);
     }
 
-    async claimReward(
+    async requestReward(
         userId: string,
         eventId: string,
         type: EventType,
@@ -66,7 +66,7 @@ export class RewardService implements IRewardService {
             throw new BadRequestException('이벤트 조건 설정이 없습니다.');
         }
 
-        // ✅ 조건 검증 + 실패 기록
+        // * 조건 검증 + 실패 기록
         try {
             EventConditionContext.validate(type, config);
         } catch (err) {
