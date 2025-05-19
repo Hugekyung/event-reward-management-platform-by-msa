@@ -1,4 +1,9 @@
 import { CouponRewardSchema } from '@libs/database/schemas/coupon-reward.schema';
+import {
+    EventRewardMapping,
+    EventRewardMappingSchema,
+} from '@libs/database/schemas/event-reward-mapping.schema';
+import { Event, EventSchema } from '@libs/database/schemas/event.schema';
 import { ItemRewardSchema } from '@libs/database/schemas/item-reward.schema';
 import { PointRewardSchema } from '@libs/database/schemas/point-reward.schema';
 import {
@@ -6,12 +11,14 @@ import {
     RewardHistorySchema,
 } from '@libs/database/schemas/reward-history.schema';
 import { Reward, RewardSchema } from '@libs/database/schemas/reward.schema';
+import { RedisModule } from '@libs/redis';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
     EventRepositoryToken,
+    EventRewardMappingRepositoryToken,
     RewardHistoryRepositoryToken,
     RewardHistoryServiceToken,
     RewardRepositoryToken,
@@ -19,6 +26,7 @@ import {
 } from '../../common/constants/token.constants';
 import { StrategyModule } from '../../common/strategy/strategy.module';
 import { EventRepository } from '../event/event.repository';
+import { EventRewardMappingRepository } from './event-reward-mapping.repository';
 import { RewardHistoryRepository } from './reward-history.repository';
 import { RewardHistoryService } from './reward-history.service';
 import { RewardController } from './reward.controller';
@@ -50,8 +58,11 @@ import { RewardService } from './reward.service';
         ]),
         MongooseModule.forFeature([
             { name: RewardHistory.name, schema: RewardHistorySchema },
+            { name: Event.name, schema: EventSchema },
+            { name: EventRewardMapping.name, schema: EventRewardMappingSchema },
         ]),
         StrategyModule,
+        RedisModule,
     ],
     controllers: [RewardController],
     providers: [
@@ -74,6 +85,10 @@ import { RewardService } from './reward.service';
         {
             provide: EventRepositoryToken,
             useClass: EventRepository,
+        },
+        {
+            provide: EventRewardMappingRepositoryToken,
+            useClass: EventRewardMappingRepository,
         },
     ],
 })

@@ -1,10 +1,26 @@
+import {
+    RewardHistory,
+    RewardHistorySchema,
+} from '@libs/database/schemas/reward-history.schema';
 import { EventType } from '@libs/enum/event-type.enum';
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { EventConditionStrategyTokenMap } from '../constants/token.constants';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RewardHistoryRepository } from '../../modules/reward/reward-history.repository';
+import {
+    EventConditionStrategyTokenMap,
+    RewardHistoryRepositoryToken,
+} from '../constants/token.constants';
 import { EventConditionContext } from './event-condition-context';
 import { AttendanceStrategy } from './login-event.strategy';
 
 @Module({
+    imports: [
+        HttpModule,
+        MongooseModule.forFeature([
+            { name: RewardHistory.name, schema: RewardHistorySchema },
+        ]),
+    ],
     providers: [
         AttendanceStrategy,
         {
@@ -16,6 +32,10 @@ import { AttendanceStrategy } from './login-event.strategy';
             inject: [AttendanceStrategy], // 다른 전략들...
         },
         EventConditionContext,
+        {
+            provide: RewardHistoryRepositoryToken,
+            useClass: RewardHistoryRepository,
+        },
     ],
     exports: [EventConditionContext],
 })

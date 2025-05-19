@@ -6,7 +6,6 @@ import {
 } from '../../common/constants/token.constants';
 import { IEventFactory } from '../../common/interface/event-factory.interface';
 import { IEventRepository } from '../../common/interface/event-repository.interface';
-import { EventConditionContext } from '../../common/strategy/event-condition-context';
 import { CreateEventDto } from './dto/create-event.dto';
 
 @Injectable()
@@ -22,10 +21,6 @@ export class EventService {
         createEventDto: CreateEventDto,
         creatorUserId: string,
     ): Promise<IEventWithId> {
-        EventConditionContext.validate(
-            createEventDto.type,
-            createEventDto.conditions.config,
-        );
         const event = this.eventFactory.create(createEventDto, creatorUserId);
         return await this.eventRepository.create(event);
     }

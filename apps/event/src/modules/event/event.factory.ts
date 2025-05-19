@@ -16,7 +16,6 @@ export class EventFactory implements IEventFactory {
             conditions: {
                 type: dto.conditions.type,
                 description: dto.conditions.description,
-                config: dto.conditions.config,
             },
             rewards: dto.rewardIds.map((id) => new Types.ObjectId(id)),
             createdBy: new Types.ObjectId(creatorUserId),

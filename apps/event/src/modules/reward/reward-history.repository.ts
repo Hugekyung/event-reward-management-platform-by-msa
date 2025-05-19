@@ -25,8 +25,8 @@ export class RewardHistoryRepository implements IRewardHistoryRepository {
     ): Promise<IRewardHistoryWithId[]> {
         const histories = await this.model
             .find(query, null, options)
-            .populate('eventId', 'name') // eventId → name만
-            .populate('rewardId') // reward 도큐먼트 전체
+            .populate('eventId', 'name')
+            .populate('rewardId')
             .lean();
         return toRewardHistoriesResponseDto(histories);
     }
