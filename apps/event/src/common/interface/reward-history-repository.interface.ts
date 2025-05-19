@@ -7,4 +7,5 @@ export interface IRewardHistoryRepository {
     ): Promise<IRewardHistoryWithId[]>;
     count(query: Record<string, any>): Promise<number>;
     create(rewardHistoryObject): Promise<IRewardHistoryWithId>;
+    exists(userId: string, eventId: string): Promise<boolean>;
 }

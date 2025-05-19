@@ -10,7 +10,6 @@ export interface IEvent {
     type: EventType;
     conditions: {
         type: EventType;
-        config: Record<string, any>;
         description: string;
     };
     rewards?: Types.ObjectId[];

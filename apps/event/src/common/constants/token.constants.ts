@@ -8,3 +8,6 @@ export const RewardHistoryRepositoryToken = Symbol('IRewardHistoryRepository');
 export const EventRewardMappingRepositoryToken = Symbol(
     'IEventRewardMappingRepository',
 );
+export const EventConditionStrategyTokenMap = Symbol(
+    'EventConditionStrategyTokenMap',
+);

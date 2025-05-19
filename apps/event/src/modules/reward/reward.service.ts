@@ -3,12 +3,7 @@ import {
     IRewardWithId,
 } from '@libs/database/interface/reward.interface';
 import { EventType } from '@libs/enum/event-type.enum';
-import {
-    BadRequestException,
-    Inject,
-    Injectable,
-    NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
     EventRepositoryToken,
     EventRewardMappingRepositoryToken,
@@ -36,6 +31,7 @@ export class RewardService implements IRewardService {
         private readonly rewardHistoryRepository: IRewardHistoryRepository,
         @Inject(EventRewardMappingRepositoryToken)
         private readonly eventRewardMappingRepository: IEventRewardMappingRepository,
+        private readonly conditionContext: EventConditionContext,
     ) {}
 
     async createReward(dto: CreateRewardDto): Promise<IRewardWithId> {
@@ -61,14 +57,9 @@ export class RewardService implements IRewardService {
             throw new NotFoundException('이벤트를 찾을 수 없습니다.');
         }
 
-        const config = event.conditions?.config;
-        if (!config) {
-            throw new BadRequestException('이벤트 조건 설정이 없습니다.');
-        }
-
         // * 조건 검증 + 실패 기록
         try {
-            EventConditionContext.validate(type, config);
+            await this.conditionContext.validate(type, userId, eventId);
         } catch (err) {
             const rewardHistoryObject = RewardHistoryFactory.createFailure(
                 userId,

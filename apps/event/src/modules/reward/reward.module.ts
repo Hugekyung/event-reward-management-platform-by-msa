@@ -6,7 +6,9 @@ import {
     RewardHistorySchema,
 } from '@libs/database/schemas/reward-history.schema';
 import { Reward, RewardSchema } from '@libs/database/schemas/reward.schema';
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
     EventRepositoryToken,
@@ -15,6 +17,7 @@ import {
     RewardRepositoryToken,
     RewardServiceToken,
 } from '../../common/constants/token.constants';
+import { StrategyModule } from '../../common/strategy/strategy.module';
 import { EventRepository } from '../event/event.repository';
 import { RewardHistoryRepository } from './reward-history.repository';
 import { RewardHistoryService } from './reward-history.service';
@@ -24,6 +27,15 @@ import { RewardService } from './reward.service';
 
 @Module({
     imports: [
+        ConfigModule,
+        HttpModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (config: ConfigService) => ({
+                baseURL: config.get<string>('AUTH_SERVER_URL'),
+                timeout: 3000,
+            }),
+        }),
         MongooseModule.forFeatureAsync([
             {
                 name: Reward.name,
@@ -39,6 +51,7 @@ import { RewardService } from './reward.service';
         MongooseModule.forFeature([
             { name: RewardHistory.name, schema: RewardHistorySchema },
         ]),
+        StrategyModule,
     ],
     controllers: [RewardController],
     providers: [

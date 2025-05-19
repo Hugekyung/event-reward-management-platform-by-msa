@@ -51,6 +51,11 @@ export class UserService implements IUserService {
         return;
     }
 
+    async checkAttendance(userId: string): Promise<{ ok: boolean }> {
+        const user = await this.userRepository.findById(userId);
+        return { ok: user && user.loginCount > 0 };
+    }
+
     private isCreateAdminUserDto(
         dto: CreateUserDto | CreateAdminUserDto,
     ): dto is CreateAdminUserDto {

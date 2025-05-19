@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserServiceToken } from '../../common/constants/token.constants';
 import { IUserService } from '../../common/interface/user-service.interface';
@@ -24,5 +24,14 @@ export class UserController implements IUserService {
         @Body() createAdminUserDto: CreateAdminUserDto,
     ): Promise<void> {
         await this.userService.createUser(createAdminUserDto);
+    }
+
+    // * 내부 요청용
+    @Get(':userId/attendance-check')
+    @ApiOperation({ summary: '첫 로그인 여부 확인' })
+    async checkAttendance(
+        @Param('userId') userId: string,
+    ): Promise<{ ok: boolean }> {
+        return await this.userService.checkAttendance(userId);
     }
 }

@@ -1,3 +1,4 @@
+import { IUserWithId } from '@libs/database/interface/user.interface';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import {
     JwtServiceToken,
@@ -21,13 +22,18 @@ export class AuthService implements IAuthService {
     ) {}
 
     async login(dto: LoginUserDto): Promise<TokenResponseDto> {
-        const user = await this.userRepository.findByEmail(dto.email);
+        const user: IUserWithId = await this.userRepository.findByEmail(
+            dto.email,
+        );
         if (
             !user ||
             !(await PasswordUtil.verify(dto.password, user.password))
         ) {
             throw new UnauthorizedException('Invalid credentials');
         }
+
+        // * 첫 로그인 카운트 증가
+        await this.userRepository.increaseLoginCount(user._id.toString());
 
         const { accessToken, refreshToken } = this.jwtService.issueTokens(user);
         await this.jwtService.storeRefreshToken(user._id, refreshToken);

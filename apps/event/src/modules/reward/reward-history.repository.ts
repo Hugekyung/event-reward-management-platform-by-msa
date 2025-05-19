@@ -35,8 +35,14 @@ export class RewardHistoryRepository implements IRewardHistoryRepository {
         return await this.model.countDocuments(query);
     }
 
+    // ! 타입 설정하기!
     async create(rewardHistoryObject): Promise<IRewardHistoryWithId> {
         const histories = await this.model.create(rewardHistoryObject);
         return toRewardHistoryResponseDto(histories);
+    }
+
+    async exists(userId: string, eventId: string): Promise<boolean> {
+        const exists = await this.model.exists({ userId, eventId });
+        return exists ? true : false;
     }
 }

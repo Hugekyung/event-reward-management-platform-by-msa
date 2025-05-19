@@ -24,15 +24,18 @@ export class UserRepository implements IUserRepository {
 
     async findById(id: string): Promise<IUserWithId> {
         const user = await this.userModel.findById(id).lean();
-        if (!user) {
-            throw new Error('해당 _id를 가진 유저 정보가 없습니다.');
-        }
-
         return toUserResponseDto(user);
     }
 
     async create(user: IUser): Promise<void> {
         await this.userModel.create(user);
         return;
+    }
+
+    async increaseLoginCount(userId: string): Promise<void> {
+        await this.userModel.updateOne(
+            { _id: userId },
+            { $inc: { loginCount: 1 } },
+        );
     }
 }

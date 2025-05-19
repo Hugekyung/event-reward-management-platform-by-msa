@@ -5,4 +5,5 @@ export interface IUserService {
     createUser(
         createUserDto: CreateUserDto | CreateAdminUserDto,
     ): Promise<void>;
+    checkAttendance(userId: string): Promise<{ ok: boolean }>;
 }

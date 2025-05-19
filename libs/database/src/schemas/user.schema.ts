@@ -18,8 +18,8 @@ export class User implements IUser {
     @Prop({ enum: ['USER', 'OPERATOR', 'AUDITOR', 'ADMIN'], default: 'USER' })
     role: string;
 
-    @Prop()
-    refreshToken?: string;
+    @Prop({ default: 0 })
+    loginCount: number;
 
     @Prop()
     deletedAt?: Date;

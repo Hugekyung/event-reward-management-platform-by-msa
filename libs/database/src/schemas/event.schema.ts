@@ -1,11 +1,12 @@
 import { EventType } from '@libs/enum/event-type.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { IEvent } from '../interface/event.interface';
 
 export type EventDocument = Event & Document;
 
 @Schema({ timestamps: true })
-export class Event {
+export class Event implements IEvent {
     @Prop({ required: true })
     name: string;
 
@@ -30,7 +31,6 @@ export class Event {
     })
     conditions: {
         type: EventType;
-        config: Record<string, any>;
         description: string;
     };
 
