@@ -1,0 +1,34 @@
+import { IRewardHistoryWithId } from '@libs/database/interface/reward-history.interface';
+import { toRewardHistoriesResponseDto } from '@libs/database/mapper/reward-history.mapper';
+import {
+    RewardHistory,
+    RewardHistoryDocument,
+} from '@libs/database/schemas/reward-history.schema';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { IRewardHistoryRepository } from '../../common/interface/reward-history-repository.interface';
+
+@Injectable()
+export class RewardHistoryRepository implements IRewardHistoryRepository {
+    constructor(
+        @InjectModel(RewardHistory.name)
+        private readonly model: Model<RewardHistoryDocument>,
+    ) {}
+
+    async findHistories(
+        query: Record<string, any>,
+        options: { skip: number; limit: number; sort: any },
+    ): Promise<IRewardHistoryWithId[]> {
+        const histories = await this.model
+            .find(query, null, options)
+            .populate('eventId', 'name') // eventId → name만
+            .populate('rewardId') // reward 도큐먼트 전체
+            .lean();
+        return toRewardHistoriesResponseDto(histories);
+    }
+
+    async count(query: Record<string, any>): Promise<number> {
+        return await this.model.countDocuments(query);
+    }
+}

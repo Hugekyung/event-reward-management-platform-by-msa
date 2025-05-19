@@ -3,26 +3,21 @@ import {
     IRewardWithId,
 } from '@libs/database/interface/reward.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import {
-    RewardFactoryToken,
-    RewardRepositoryToken,
-} from '../../common/constants/token.constants';
-import { IRewardFactory } from '../../common/interface/reward-factory.interface';
+import { RewardRepositoryToken } from '../../common/constants/token.constants';
 import { IRewardRepository } from '../../common/interface/reward-repository.interface';
 import { IRewardService } from '../../common/interface/reward-service.interface';
 import { CreateRewardDto } from './dto/create-reward.dto';
+import { RewardFactory } from './factory/reward.factory';
 
 @Injectable()
 export class RewardService implements IRewardService {
     constructor(
         @Inject(RewardRepositoryToken)
         private readonly rewardRepository: IRewardRepository,
-        @Inject(RewardFactoryToken)
-        private readonly rewardFactory: IRewardFactory,
     ) {}
 
     async createReward(dto: CreateRewardDto): Promise<IRewardWithId> {
-        const reward: IReward = this.rewardFactory.create(dto);
+        const reward: IReward = RewardFactory.createRewardObject(dto);
         return await this.rewardRepository.create(dto.type, reward);
     }
 

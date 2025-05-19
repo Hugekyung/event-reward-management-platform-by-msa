@@ -6,12 +6,11 @@ import {
 } from '@libs/database/interface/reward.interface';
 import { RewardType } from '@libs/enum/reward-type.enum';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { IRewardFactory } from '../../common/interface/reward-factory.interface';
-import { CreateRewardDto } from './dto/create-reward.dto';
+import { CreateRewardDto } from '../dto/create-reward.dto';
 
 @Injectable()
-export class RewardFactory implements IRewardFactory {
-    create(dto: CreateRewardDto): IReward {
+export class RewardFactory {
+    static createRewardObject(dto: CreateRewardDto): IReward {
         switch (dto.type) {
             case RewardType.POINT:
                 const pointReward: IPointReward = {

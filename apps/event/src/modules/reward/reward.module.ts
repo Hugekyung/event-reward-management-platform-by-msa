@@ -5,12 +5,10 @@ import { Reward, RewardSchema } from '@libs/database/schemas/reward.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
-    RewardFactoryToken,
     RewardRepositoryToken,
     RewardServiceToken,
 } from '../../common/constants/token.constants';
 import { RewardController } from './reward.controller';
-import { RewardFactory } from './reward.factory';
 import { RewardRepository } from './reward.repository';
 import { RewardService } from './reward.service';
 
@@ -39,10 +37,6 @@ import { RewardService } from './reward.service';
         {
             provide: RewardRepositoryToken,
             useClass: RewardRepository,
-        },
-        {
-            provide: RewardFactoryToken,
-            useClass: RewardFactory,
         },
     ],
 })

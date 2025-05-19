@@ -1,10 +1,12 @@
+import { RewardHistoryStatus } from '@libs/enum/reward-history-status.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { IRewardHistory } from '../interface/reward-history.interface';
 
 export type RewardHistoryDocument = RewardHistory & Document;
 
 @Schema({ timestamps: true })
-export class RewardHistory {
+export class RewardHistory implements IRewardHistory {
     @Prop({ type: Types.ObjectId, ref: 'User' })
     userId: Types.ObjectId;
 
@@ -15,13 +17,10 @@ export class RewardHistory {
     rewardId: Types.ObjectId;
 
     @Prop({ enum: ['SUCCESS', 'FAILED'] })
-    status: 'SUCCESS' | 'FAILED';
+    status: RewardHistoryStatus;
 
     @Prop()
     reason?: string;
-
-    @Prop()
-    idempotencyKey?: string;
 }
 
 export const RewardHistorySchema = SchemaFactory.createForClass(RewardHistory);
