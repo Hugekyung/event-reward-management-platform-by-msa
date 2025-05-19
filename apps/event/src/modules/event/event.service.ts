@@ -1,7 +1,12 @@
 import { IEventWithId } from '@libs/database/interface/event.interface';
 import { Inject, Injectable } from '@nestjs/common';
-import { EventRepositoryToken } from '../../common/constants/token.constants';
+import {
+    EventFactoryToken,
+    EventRepositoryToken,
+} from '../../common/constants/token.constants';
+import { IEventFactory } from '../../common/interface/event-factory.interface';
 import { IEventRepository } from '../../common/interface/event-repository.interface';
+import { EventConditionContext } from '../../common/strategy/event-condition-context';
 import { CreateEventDto } from './dto/create-event.dto';
 
 @Injectable()
@@ -9,17 +14,27 @@ export class EventService {
     constructor(
         @Inject(EventRepositoryToken)
         private readonly eventRepository: IEventRepository,
+        @Inject(EventFactoryToken)
+        private readonly eventFactory: IEventFactory,
     ) {}
 
-    async createEvent(dto: CreateEventDto): Promise<IEventWithId> {
-        return await this.eventRepository.create(dto);
+    async createEvent(
+        createEventDto: CreateEventDto,
+        creatorUserId: string,
+    ): Promise<IEventWithId> {
+        EventConditionContext.validate(
+            createEventDto.type,
+            createEventDto.conditions.config,
+        );
+        const event = this.eventFactory.create(createEventDto, creatorUserId);
+        return await this.eventRepository.create(event);
     }
 
     async findAllEvents(): Promise<IEventWithId[]> {
         return await this.eventRepository.findAll();
     }
 
-    async findEventById(id: string): Promise<IEventWithId> {
-        return await this.eventRepository.findById(id);
+    async findEventById(eventId: string): Promise<IEventWithId> {
+        return await this.eventRepository.findById(eventId);
     }
 }

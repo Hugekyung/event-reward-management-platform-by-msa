@@ -1,3 +1,4 @@
+import { EventType } from '@libs/enum/event-type.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -17,16 +18,20 @@ export class Event {
     @Prop({ required: true })
     endDate: Date;
 
-    @Prop({ default: true })
+    @Prop({ default: false })
     isActive: boolean;
+
+    @Prop({ required: true })
+    type: EventType;
 
     @Prop({
         type: Object,
         required: true,
     })
     conditions: {
-        type: string;
-        detail: string;
+        type: EventType;
+        config: Record<string, any>;
+        description: string;
     };
 
     @Prop({ type: [Types.ObjectId], ref: 'Reward' })

@@ -1,3 +1,4 @@
+export const EventFactoryToken = Symbol('IEventFactory');
 export const EventServiceToken = Symbol('IEventService');
 export const EventRepositoryToken = Symbol('IEventRepository');
 export const RewardServiceToken = Symbol('IRewardService');

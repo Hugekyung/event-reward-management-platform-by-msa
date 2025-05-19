@@ -1,23 +1,42 @@
 import { EventType } from '@libs/enum/event-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsObject, IsString } from 'class-validator';
 
 export class CreateEventDto {
-    @ApiProperty({ description: '이벤트 이름' })
-    @IsString()
+    @ApiProperty()
     @IsNotEmpty()
+    @IsString()
     name: string;
 
-    @ApiProperty({ description: '이벤트 조건 설명' })
+    @ApiProperty()
+    @IsNotEmpty()
     @IsString()
-    @IsNotEmpty()
-    conditionDescription: string;
+    description: string;
 
-    @ApiProperty({
-        enum: EventType,
-        description: '이벤트 타입 (출석, 초대, 퀘스트, 업그레이드)',
-    })
-    @IsEnum(EventType)
+    @ApiProperty()
     @IsNotEmpty()
+    startDate: Date;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    endDate: Date;
+
+    @ApiProperty({ enum: EventType })
+    @IsNotEmpty()
+    @IsEnum(EventType)
     type: EventType;
+
+    @ApiProperty({ description: '조건 정보' })
+    @IsNotEmpty()
+    @IsObject()
+    conditions: {
+        type: EventType;
+        description: string;
+        config: Record<string, any>;
+    };
+
+    @ApiProperty({ description: '보상 ID 목록' })
+    @IsNotEmpty()
+    @IsString({ each: true })
+    rewardIds: string[];
 }

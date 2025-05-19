@@ -2,10 +2,12 @@ import { EventSchema } from '@libs/database/schemas/event.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
+    EventFactoryToken,
     EventRepositoryToken,
     EventServiceToken,
 } from '../../common/constants/token.constants';
 import { EventController } from './event.controller';
+import { EventFactory } from './event.factory';
 import { EventRepository } from './event.repository';
 import { EventService } from './event.service';
 
@@ -16,6 +18,10 @@ import { EventService } from './event.service';
     controllers: [EventController],
     providers: [
         EventService,
+        {
+            provide: EventFactoryToken,
+            useClass: EventFactory,
+        },
         {
             provide: EventServiceToken,
             useClass: EventService,
