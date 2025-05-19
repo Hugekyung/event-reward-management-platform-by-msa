@@ -5,7 +5,7 @@ export interface IUser {
     name: string;
     password: string;
     role: string;
-    loginCount: number;
+    loginCount?: number;
     deletedAt?: Date;
 }
 

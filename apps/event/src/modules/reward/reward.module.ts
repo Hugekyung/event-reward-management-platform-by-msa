@@ -1,4 +1,3 @@
-import { CouponRewardSchema } from '@libs/database/schemas/coupon-reward.schema';
 import {
     EventRewardMapping,
     EventRewardMappingSchema,
@@ -51,7 +50,6 @@ import { RewardService } from './reward.service';
                     const schema = RewardSchema;
                     schema.discriminator('POINT', PointRewardSchema);
                     schema.discriminator('ITEM', ItemRewardSchema);
-                    schema.discriminator('COUPON', CouponRewardSchema);
                     return schema;
                 },
             },

@@ -4,10 +4,10 @@ import {
     JwtServiceToken,
     UserRepositoryToken,
 } from '../../common/constants/token.constants';
-import { IAuthService } from '../../common/interface/auth.service.interface';
+import { IAuthService } from '../../common/interface/auth-service.interface';
 import { JwtPayload } from '../../common/interface/jwt-payload.interface';
 import { IJwtService } from '../../common/interface/jwt-service.interface';
-import { IUserRepository } from '../../common/interface/user.repository.interface';
+import { IUserRepository } from '../../common/interface/user-repository.interface';
 import { PasswordUtil } from '../../common/utils/password.util';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { TokenResponseDto } from './dto/token-response.dto';

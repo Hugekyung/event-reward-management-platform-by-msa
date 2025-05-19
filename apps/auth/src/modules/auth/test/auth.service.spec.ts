@@ -1,7 +1,7 @@
 import { UserRole } from '@libs/enum/user-role.enum';
 import { UnauthorizedException } from '@nestjs/common';
 import { IJwtService } from '../../../common/interface/jwt-service.interface';
-import { IUserRepository } from '../../../common/interface/user.repository.interface';
+import { IUserRepository } from '../../../common/interface/user-repository.interface';
 import { PasswordUtil } from '../../../common/utils/password.util';
 import { LoginUserDto } from '../../user/dto/login-user.dto';
 import { AuthService } from '../auth.service';

@@ -6,7 +6,6 @@ import { JwtStrategy } from './auth/jwt/jwt.strategy';
 import { RolesGuard } from './auth/role/role.guard';
 import { ProxyController } from './modules/proxy/proxy.controller';
 import { ProxyModule } from './modules/proxy/proxy.module';
-import { ProxyService } from './modules/proxy/proxy.service';
 
 @Module({
     imports: [
@@ -17,6 +16,6 @@ import { ProxyService } from './modules/proxy/proxy.service';
         }),
     ],
     controllers: [ProxyController],
-    providers: [JwtStrategy, JwtAuthGuard, RolesGuard, ProxyService],
+    providers: [JwtStrategy, JwtAuthGuard, RolesGuard],
 })
 export class GatewayModule {}

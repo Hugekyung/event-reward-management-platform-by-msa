@@ -1,7 +1,7 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthServiceToken } from '../../common/constants/token.constants';
-import { IAuthService } from '../../common/interface/auth.service.interface';
+import { IAuthService } from '../../common/interface/auth-service.interface';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { TokenResponseDto } from './dto/token-response.dto';
 
