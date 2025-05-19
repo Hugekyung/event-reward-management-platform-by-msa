@@ -1,4 +1,6 @@
+import { EventSchema } from '@libs/database/schemas/event.schema';
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import {
     EventRepositoryToken,
     EventServiceToken,
@@ -8,6 +10,9 @@ import { EventRepository } from './event.repository';
 import { EventService } from './event.service';
 
 @Module({
+    imports: [
+        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
+    ],
     controllers: [EventController],
     providers: [
         EventService,
@@ -20,5 +25,6 @@ import { EventService } from './event.service';
             useClass: EventRepository,
         },
     ],
+    exports: [EventServiceToken],
 })
 export class EventModule {}

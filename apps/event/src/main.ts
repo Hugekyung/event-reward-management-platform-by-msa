@@ -7,11 +7,11 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { EventModule } from './event.module';
+import { AppModule } from './app.module';
 import { IndexModule } from './modules/index.module';
 
 async function bootstrap() {
-    const app = await NestFactory.create(EventModule);
+    const app = await NestFactory.create(AppModule);
     const config = app.get<ConfigService>(ConfigService);
 
     // * Swagger
@@ -32,7 +32,7 @@ async function bootstrap() {
         }),
     );
 
-    const port: number = +config.get('EVENT_SERVER_PORT') || 3000;
+    const port: number = +config.get('EVENT_SERVER_PORT') || 3002;
     await app.listen(port, () => {
         Logger.log(`EVENT SERVER WITH ${port}PORT CONNECTED`);
     });

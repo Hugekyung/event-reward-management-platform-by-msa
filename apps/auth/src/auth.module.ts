@@ -14,17 +14,19 @@ import { UserModule } from './modules/user/user.module';
         }),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
-            useFactory: (config: ConfigService) => ({
-                uri: getMongoUri({
-                    host: config.get<string>('MONGO_HOST')!,
-                    port: parseInt(config.get<string>('MONGO_PORT') ?? '27017'),
-                    dbName: config.get<string>('MONGO_DB_NAME')!,
-                }),
-            }),
+            useFactory: (config: ConfigService) => {
+                const uri = getMongoUri({
+                    host: config.get('MONGO_HOST'),
+                    port: parseInt(config.get('MONGO_PORT')!),
+                    dbName: config.get('MONGO_DB_NAME')!,
+                });
+                console.log('📦 Mongo URI:', uri);
+                return { uri };
+            },
             inject: [ConfigService],
         }),
         MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
         UserModule,
     ],
 })
-export class AuthModule {}
+export class AppModule {}

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { EventModule } from '../event.module';
+import { EventModule } from './event/event.module';
 import { RewardModule } from './reward/reward.module';
 
 @Module({

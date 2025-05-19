@@ -3,11 +3,11 @@ import type { ValidationError } from '@nestjs/common';
 import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './auth.module';
+import { AppModule } from './auth.module';
 import { IndexModule } from './modules/index.module';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AuthModule);
+    const app = await NestFactory.create(AppModule);
     const config = app.get<ConfigService>(ConfigService);
 
     // * Swagger

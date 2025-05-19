@@ -8,6 +8,7 @@ import { Reward, RewardSchema } from '@libs/database/schemas/reward.schema';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { resolve } from 'path';
 import { Event } from '../../../libs/database/src/schemas/event.schema';
 import { EventModule } from './modules/event/event.module';
 import { RewardHistoryService } from './modules/reward/reward-history.service';
@@ -15,16 +16,21 @@ import { RewardModule } from './modules/reward/reward.module';
 
 @Module({
     imports: [
-        ConfigModule.forRoot({ isGlobal: true }),
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: resolve(process.cwd(), 'apps/event/.env'),
+        }),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
-            useFactory: (config: ConfigService) => ({
-                uri: getMongoUri({
-                    host: config.get<string>('MONGO_HOST')!,
-                    port: parseInt(config.get<string>('MONGO_PORT') ?? '27017'),
-                    dbName: config.get<string>('MONGO_DB_NAME')!,
-                }),
-            }),
+            useFactory: (config: ConfigService) => {
+                const uri = getMongoUri({
+                    host: config.get('MONGO_HOST'),
+                    port: parseInt(config.get('MONGO_PORT')!),
+                    dbName: config.get('MONGO_DB_NAME')!,
+                });
+                console.log('📦 Mongo URI:', uri);
+                return { uri };
+            },
             inject: [ConfigService],
         }),
         MongooseModule.forFeature([
@@ -37,4 +43,4 @@ import { RewardModule } from './modules/reward/reward.module';
     ],
     providers: [RewardHistoryService],
 })
-export class EventModule {}
+export class AppModule {}
