@@ -16,14 +16,13 @@ import { UserService } from './user.service';
     controllers: [UserController],
     providers: [
         {
-            provide: UserRepositoryToken,
-            useClass: UserRepository,
-        },
-        {
             provide: UserServiceToken,
             useClass: UserService,
         },
+        {
+            provide: UserRepositoryToken,
+            useClass: UserRepository,
+        },
     ],
-    exports: [UserServiceToken, UserRepositoryToken],
 })
 export class UserModule {}

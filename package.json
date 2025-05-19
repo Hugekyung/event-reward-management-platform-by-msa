@@ -7,8 +7,8 @@
     "license": "UNLICENSED",
     "scripts": {
         "build": "nest build",
-        "build:gateway": "nest build gateway",
-        "build:auth": "nest build auth",
+        "build:gateway": "nest build apps/gateway",
+        "build:auth": "nest build apps/auth",
         "build:event": "nest build apps/event",
         "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
         "start": "nest start",

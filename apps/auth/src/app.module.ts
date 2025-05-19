@@ -1,9 +1,10 @@
 import { getMongoUri } from '@libs/database/config/db.config';
+import { User, UserSchema } from '@libs/database/schemas/user.schema';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { resolve } from 'path';
-import { UserModule } from './modules/user/user.module';
+import { IndexModule } from './modules/index.module';
 
 @Module({
     imports: [
@@ -24,7 +25,8 @@ import { UserModule } from './modules/user/user.module';
             },
             inject: [ConfigService],
         }),
-        UserModule,
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+        IndexModule,
     ],
 })
 export class AppModule {}
