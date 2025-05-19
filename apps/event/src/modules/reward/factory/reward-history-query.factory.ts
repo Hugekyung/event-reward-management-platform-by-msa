@@ -1,13 +1,13 @@
 import {
     AdminRewardHistoryFilterDto,
-    FilterRewardHistoryDto,
+    RewardHistoryFilterDto,
 } from '../dto/filter-reward-history.dto';
 
 export class RewardHistoryQueryFactory {
     static createQueryObject(
         userId: string | null,
         role: string,
-        filter: FilterRewardHistoryDto | AdminRewardHistoryFilterDto,
+        filter: RewardHistoryFilterDto | AdminRewardHistoryFilterDto,
     ): {
         query: Record<string, any>;
         options: { skip: number; limit: number; sort: any };

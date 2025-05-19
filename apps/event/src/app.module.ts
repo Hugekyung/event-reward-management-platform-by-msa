@@ -11,7 +11,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { resolve } from 'path';
 import { Event } from '../../../libs/database/src/schemas/event.schema';
 import { EventModule } from './modules/event/event.module';
-import { RewardHistoryService } from './modules/reward/reward-history.service';
 import { RewardModule } from './modules/reward/reward.module';
 
 @Module({
@@ -41,6 +40,5 @@ import { RewardModule } from './modules/reward/reward.module';
         EventModule,
         RewardModule,
     ],
-    providers: [RewardHistoryService],
 })
 export class AppModule {}
