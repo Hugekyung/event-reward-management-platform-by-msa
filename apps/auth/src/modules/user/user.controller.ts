@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @ApiTags('User')
 @Controller('users')
-export class UserController implements IUserService {
+export class UserController {
     constructor(
         @Inject(UserServiceToken) private readonly userService: IUserService,
     ) {}

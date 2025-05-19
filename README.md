@@ -1,99 +1,128 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🎯 Event Reward Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> NestJS + MongoDB 기반 MSA 이벤트 보상 시스템
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📘 프로젝트 개요
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **프로젝트 명:** Event Reward Platform
+- **기술 스택:** `NestJS`, `MongoDB`, `Redis`, `Docker`, `Swagger`, `Passport JWT`
+- **아키텍처:** Monorepo 기반 MSA 구조
+- **목표:** 실제 서비스에 적용 가능한 이벤트/보상 관리 시스템 구현
 
-## Project setup
+---
 
-```bash
-$ yarn install
+## 🏗️ 시스템 구조 및 역할
+
+| 서비스명       | 포트        | 주요 역할                                        |
+| -------------- | ----------- | ------------------------------------------------ |
+| Gateway Server | 3000        | 요청 라우팅, 인증/인가, 프록시 처리              |
+| Auth Server    | 3001        | 유저 등록, 로그인, 권한 관리, JWT 발급 및 검증   |
+| Event Server   | 3002        | 이벤트 생성/조회, 보상 등록/조회, 보상 요청 처리 |
+| MongoDB (2개)  | 27017/27018 | 각각 Auth/Event 전용 DB 분리 운영                |
+| Redis          | 6379        | RefreshToken 관리, 멱등성 키 처리                |
+
+---
+
+## 🧱 디렉터리 구조
+
+```
+apps/
+  gateway/        # Gateway 서버
+  auth/           # Auth 서버
+  event/          # Event 서버
+
+libs/
+  database/       # 공통 Mongoose 스키마, interface
+  redis/          # Redis 모듈 및 서비스
+  shared/         # 유틸, 인터셉터, 데코레이터, 상수 등
 ```
 
-## Compile and run the project
+---
+
+## 🧪 주요 기능 요약
+
+### ✅ 인증 (Auth Server)
+
+- 유저/관리자 회원가입 API (`/auth/register`, `/auth/register-admin`)
+- 로그인 & JWT 발급 (`/auth/login`)
+- RefreshToken 재발급 (`/auth/refresh`)
+- 권한 분리: `USER`, `OPERATOR`, `AUDITOR`, `ADMIN`
+
+### ✅ 이벤트 (Event Server)
+
+- 관리자용 이벤트 생성 (`/event/events`)
+- 이벤트 조건 타입 분리 + 검증 전략 적용
+
+    - 예: `첫 로그인`, `친구 초대`, `데일리 퀘스트`, `업그레이드`
+
+### ✅ 보상 (Reward)
+
+- 보상 생성 (포인트, 아이템, 쿠폰)
+- discriminator 기반 스키마 구조 확장
+- 보상과 이벤트 매핑 (`EventRewardMapping`)
+- 보상 수량 관리
+
+### ✅ 보상 요청/조회
+
+- `/reward/claim`: 이벤트 조건 충족 시 보상 요청
+- `/reward/history`: 유저/관리자별 보상 이력 조회
+- 멱등키 처리 + 중복 방지 (Redis + Unique Index)
+- 필터링, 페이징, 정렬 지원
+
+---
+
+## 🛡️ 기술적 설계 포인트
+
+- **MSA + Monorepo 구조**: 서버별 책임 분리 + 공통 코드 공유
+- **interface + token 기반 DI**: 의존성 분리 및 테스트 용이성 확보
+- **Factory + Strategy 패턴**: 이벤트 조건별 로직 처리
+- **Mongoose Discriminator**: Reward 스키마 확장에 최적
+- **Redis 멱등성 처리**: 보상 중복 방지 및 안전성 확보
+- **Swagger 적용**: 모든 API에 명세 자동화
+
+---
+
+## 🚀 실행 방법
 
 ```bash
-# development
-$ yarn run start
+# 프로젝트 실행
+$ docker-compose up --build
 
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+# Swagger (Gateway 경유)
+http://localhost:3000/api-docs
 ```
 
-## Run tests
+---
+
+## 🧪 API 테스트 가이드
+
+- **모든 요청은 Gateway(3000)로 진입**
+- Swagger 문서 또는 Postman으로 테스트
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+POST http://localhost:3000/api/auth/register
+POST http://localhost:3000/api/auth/login
+POST http://localhost:3000/api/event/events
+POST http://localhost:3000/api/reward/claim
+GET  http://localhost:3000/api/reward/history
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 📌 기타 참고사항
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- `@GetUser()` 데코레이터로 JWT 유저 정보 추출
+- JWT 발급/검증 로직은 `libs/shared/jwt`에서 전역 관리
+- RedisService도 전역 `libs/redis`에서 관리
+- 테스트 코드: 핵심 기능(Auth, 보상 요청 등) 단위 테스트 작성
 
-```bash
-$ yarn install -g mau
-$ mau deploy
-```
+---
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🧠 정리
 
-## Resources
+- 이 프로젝트는 **도메인 중심 설계**, **확장성 있는 구조**, **보안/안정성 고려**, **실서비스 기준의 품질**을 모두 갖춘 예제입니다.
+- MSA 구조, MongoDB 스키마 설계, 이벤트 조건별 분기 처리 등 백엔드 실무 역량을 보여주기에 최적입니다.
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
