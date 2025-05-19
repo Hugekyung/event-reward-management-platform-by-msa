@@ -1,6 +1,6 @@
+import { UserRole } from '@libs/enum/user-role.enum';
+import { JwtPayload } from '@libs/shared/interface/jwt-payload.interface';
 import { ConfigService } from '@nestjs/config';
-import { UserRole } from '../../../../../../libs/enum/src/user-role.enum';
-import type { JwtPayload } from '../../../common/interface/jwt-payload.interface';
 import { JwtStrategy } from '../jwt.strategy';
 
 describe('JwtStrategy', () => {

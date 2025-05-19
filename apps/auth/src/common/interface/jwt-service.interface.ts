@@ -1,9 +1,10 @@
 import { IUser } from '@libs/database/interface/user.interface';
+import { Types } from 'mongoose';
 import { JwtPayload } from './jwt-payload.interface';
 
 export interface IJwtService {
     issueTokens(user: IUser): { accessToken: string; refreshToken: string };
-    storeRefreshToken(userId: string, token: string): Promise<void>;
+    storeRefreshToken(userId: Types.ObjectId, token: string): Promise<void>;
     verifyRefreshToken(token: string): JwtPayload;
-    validateRefreshToken(userId: string, givenToken: string): Promise<void>;
+    validateRefreshToken(sub: string, givenToken: string): Promise<void>;
 }

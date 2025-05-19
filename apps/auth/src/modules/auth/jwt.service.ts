@@ -3,6 +3,7 @@ import { IRedisService } from '@libs/redis/redis-service.interface';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
+import { Types } from 'mongoose';
 import { RedisServiceToken } from '../../common/constants/token.constants';
 import { JwtPayload } from '../../common/interface/jwt-payload.interface';
 import { IJwtService } from '../../common/interface/jwt-service.interface';
@@ -46,7 +47,10 @@ export class JwtService implements IJwtService {
         return { accessToken, refreshToken };
     }
 
-    async storeRefreshToken(userId: string, token: string): Promise<void> {
+    async storeRefreshToken(
+        userId: Types.ObjectId,
+        token: string,
+    ): Promise<void> {
         await this.redis.set(`refresh:${userId}`, token, {
             EX: this.refreshTTL,
         });

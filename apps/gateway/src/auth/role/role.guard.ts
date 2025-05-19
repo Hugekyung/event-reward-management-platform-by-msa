@@ -1,8 +1,8 @@
 import { UserRole } from '@libs/enum/user-role.enum';
+import { JwtPayload } from '@libs/shared/interface/jwt-payload.interface';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { JwtPayload } from '../../common/interface/jwt-payload.interface';
 import { ROLES_KEY } from './role.decorator';
 
 @Injectable()

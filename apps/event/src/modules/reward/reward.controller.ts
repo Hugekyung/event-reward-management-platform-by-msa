@@ -10,7 +10,7 @@ import {
     Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'libs/common/get-user.decorator';
+import { GetUser } from 'libs/shared/get-user.decorator';
 import {
     RewardHistoryServiceToken,
     RewardServiceToken,
@@ -70,6 +70,6 @@ export class RewardController {
     @Roles(UserRole.OPERATOR, UserRole.AUDITOR, UserRole.ADMIN)
     @ApiOperation({ summary: '이벤트 보상 요청 내역 확인(관리자)' })
     getAllRewardHistories(@Query() filter: AdminRewardHistoryFilterDto) {
-        return this.service.findHistories(null, 'ADMIN', filter); // userId는 query로 들어옴
+        return this.service.findHistories(null, 'ADMIN', filter);
     }
 }

@@ -21,15 +21,6 @@
                 "tsConfigPath": "libs/database/tsconfig.lib.json"
             }
         },
-        "decorator": {
-            "type": "library",
-            "root": "libs/decorator",
-            "entryFile": "index",
-            "sourceRoot": "libs/decorator/src",
-            "compilerOptions": {
-                "tsConfigPath": "libs/decorator/tsconfig.lib.json"
-            }
-        },
         "enum": {
             "type": "library",
             "root": "libs/enum",

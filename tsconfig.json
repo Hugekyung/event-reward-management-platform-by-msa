@@ -23,7 +23,9 @@
             "@libs/enum": ["libs/enum/src"],
             "@libs/enum/*": ["libs/enum/src/*"],
             "@libs/redis": ["libs/redis/src"],
-            "@libs/redis/*": ["libs/redis/src/*"]
+            "@libs/redis/*": ["libs/redis/src/*"],
+            "@libs/shared": ["libs/shared"],
+            "@libs/shared/*": ["libs/shared/*"]
         }
     }
 }
