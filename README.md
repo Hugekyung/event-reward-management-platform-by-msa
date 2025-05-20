@@ -88,9 +88,6 @@ libs/
 ```bash
 # 프로젝트 실행
 $ docker-compose up --build -d
-
-# Swagger (Gateway 경유)
-http://localhost:3000/api-docs
 ```
 
 ---

@@ -17,13 +17,19 @@ export class UserRepository implements IUserRepository {
         return !!(await this.userModel.exists({ email }));
     }
 
-    async findByEmail(email: string): Promise<IUserWithId> {
+    async findByEmail(email: string): Promise<IUserWithId | null> {
         const user = await this.userModel.findOne({ email }).lean();
+        if (!user) {
+            return null;
+        }
         return toUserResponseDto(user);
     }
 
-    async findById(id: string): Promise<IUserWithId> {
+    async findById(id: string): Promise<IUserWithId | null> {
         const user = await this.userModel.findById(id).lean();
+        if (!user) {
+            return null;
+        }
         return toUserResponseDto(user);
     }
 
