@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { LoggerMiddleware } from '@libs/shared/logger.middleware';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { resolve } from 'path';
 import { JwtAuthGuard } from './auth/jwt/jwt-auth.guard';
@@ -17,4 +18,8 @@ import { ProxyModule } from './modules/proxy/proxy.module';
     controllers: [ProxyController],
     providers: [JwtStrategy, JwtAuthGuard],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(LoggerMiddleware).forRoutes('*');
+    }
+}

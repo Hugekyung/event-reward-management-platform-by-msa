@@ -18,7 +18,6 @@ export class ProxyController {
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
-        console.log('auth >>', request.url); //debug
         return this.proxyService.forwardRequest(request, response);
     }
 
@@ -28,7 +27,6 @@ export class ProxyController {
         @Req() request: Request,
         @Res() response: Response,
     ): Promise<void> {
-        console.log('not auth >>', request.url); //debug
         return this.proxyService.forwardRequest(request, response);
     }
 }

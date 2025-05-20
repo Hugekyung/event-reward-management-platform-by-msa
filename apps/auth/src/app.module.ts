@@ -1,6 +1,7 @@
 import { getMongoUri } from '@libs/database/config/db.config';
 import { User, UserSchema } from '@libs/database/schemas/user.schema';
-import { Module } from '@nestjs/common';
+import { LoggerMiddleware } from '@libs/shared/logger.middleware';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { resolve } from 'path';
@@ -29,4 +30,8 @@ import { IndexModule } from './modules/index.module';
         IndexModule,
     ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(LoggerMiddleware).forRoutes('*');
+    }
+}

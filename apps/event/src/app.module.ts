@@ -1,5 +1,6 @@
 import { getMongoUri } from '@libs/database/config/db.config';
-import { Module } from '@nestjs/common';
+import { LoggerMiddleware } from '@libs/shared/logger.middleware';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { resolve } from 'path';
@@ -25,13 +26,12 @@ import { RewardModule } from './modules/reward/reward.module';
             },
             inject: [ConfigService],
         }),
-        // MongooseModule.forFeature([
-        //     { name: Event.name, schema: EventSchema },
-        //     { name: RewardHistory.name, schema: RewardHistorySchema },
-        //     { name: EventRewardMapping.name, schema: EventRewardMappingSchema },
-        // ]),
         EventModule,
         RewardModule,
     ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(LoggerMiddleware).forRoutes('*');
+    }
+}

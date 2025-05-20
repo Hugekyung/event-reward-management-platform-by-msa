@@ -13,10 +13,8 @@ export class ProxyService implements IProxyService {
             return;
         }
 
-        console.log(1, req.path.replace('/api', '')); //debug
         return createProxyMiddleware({
-            // target: route.target,
-            target: 'http://localhost:3002', // debug
+            target: route.target,
             changeOrigin: true,
             pathRewrite: (path) => path.replace('/api', ''),
             proxyTimeout: 50000,

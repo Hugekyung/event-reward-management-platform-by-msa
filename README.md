@@ -6,9 +6,9 @@
 
 ## 📘 프로젝트 개요
 
-- **프로젝트 명:** Event Reward Platform
+- **프로젝트 명:** Event-Reward-Platform
 - **기술 스택:** `NestJS`, `MongoDB`, `Redis`, `Docker`, `Swagger`, `Passport JWT`
-- **아키텍처:** Monorepo 기반 MSA 구조
+- **아키텍처:** Monorepo 기반 MSA 구조(docker-compose)
 - **목표:** 실제 서비스에 적용 가능한 이벤트/보상 관리 시스템 구현
 
 ---
@@ -17,7 +17,7 @@
 
 | 서비스명       | 포트        | 주요 역할                                        |
 | -------------- | ----------- | ------------------------------------------------ |
-| Gateway Server | 3000        | 요청 라우팅, 인증/인가, 프록시 처리              |
+| Gateway Server | 3000        | 요청 라우팅, 인증, 프록시 처리                   |
 | Auth Server    | 3001        | 유저 등록, 로그인, 권한 관리, JWT 발급 및 검증   |
 | Event Server   | 3002        | 이벤트 생성/조회, 보상 등록/조회, 보상 요청 처리 |
 | MongoDB (2개)  | 27017/27018 | 각각 Auth/Event 전용 DB 분리 운영                |
@@ -29,14 +29,18 @@
 
 ```
 apps/
-  gateway/        # Gateway 서버
-  auth/           # Auth 서버
-  event/          # Event 서버
+  gateway/          # Gateway 서버
+  auth/             # Auth 서버
+  event/            # Event 서버
+      src/
+        common/     # constants(tokens), interceptor, interface, utils 등
+        modules/    # 서비스 로직
 
 libs/
-  database/       # 공통 Mongoose 스키마, interface
-  redis/          # Redis 모듈 및 서비스
-  shared/         # 유틸, 인터셉터, 데코레이터, 상수 등
+  database/         # 공통 Mongoose 스키마, interface, mapper
+  redis/            # Redis 모듈 및 서비스
+  shared/           # 유틸, 인터셉터, 데코레이터, 상수 등
+  enum/             # 프로젝트 공통 ENUM 타입
 ```
 
 ---
