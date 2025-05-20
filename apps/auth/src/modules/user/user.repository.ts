@@ -13,12 +13,12 @@ export class UserRepository implements IUserRepository {
         private readonly userModel: Model<UserDocument>,
     ) {}
 
+    async existsByEmail(email: string): Promise<boolean> {
+        return !!(await this.userModel.exists({ email }));
+    }
+
     async findByEmail(email: string): Promise<IUserWithId> {
         const user = await this.userModel.findOne({ email }).lean();
-        if (!user) {
-            throw new Error('해당 이메일을 가진 유저 정보가 없습니다.');
-        }
-
         return toUserResponseDto(user);
     }
 

@@ -2,6 +2,7 @@ import { IUser, IUserWithId } from '@libs/database/interface/user.interface';
 import { UserRole } from '@libs/enum/user-role.enum';
 import {
     BadRequestException,
+    ConflictException,
     Inject,
     Injectable,
     UnauthorizedException,
@@ -45,10 +46,15 @@ export class AuthService implements IAuthService {
     async createUser(
         createUserDto: CreateUserDto | CreateAdminUserDto,
     ): Promise<void> {
+        // * 이메일 중복 검사
+        await this.emailDuplicatedCheck(createUserDto.email);
+
+        // * 비밀번호 해싱
         const hashedPassword = await PasswordUtil.generateHash(
             createUserDto.password,
         );
 
+        // * 일반 유저 가입
         let userObject: IUser = UserFactory.create(
             createUserDto,
             hashedPassword,
@@ -60,8 +66,6 @@ export class AuthService implements IAuthService {
             const role = this.resolveAdminRole(createUserDto.inviteCode);
             userObject = { ...userObject, role };
         }
-
-        // * 일반 유저 가입
         await this.userRepository.create(userObject);
         return;
     }
@@ -110,5 +114,12 @@ export class AuthService implements IAuthService {
             throw new BadRequestException('잘못된 관리자 등록 코드입니다.');
         }
         return this.inviteCodeMaps[inviteCode];
+    }
+
+    private async emailDuplicatedCheck(email: string): Promise<void> {
+        const existingUser = await this.userRepository.existsByEmail(email);
+        if (existingUser) {
+            throw new ConflictException('이미 존재하는 이메일입니다.');
+        }
     }
 }
