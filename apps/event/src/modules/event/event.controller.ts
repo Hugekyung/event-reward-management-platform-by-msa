@@ -1,5 +1,6 @@
 import { IEventWithId } from '@libs/database/interface/event.interface';
 import { UserRole } from '@libs/enum/user-role.enum';
+import { GetUser } from '@libs/shared/get-user.decorator';
 import {
     Body,
     Controller,
@@ -7,11 +8,10 @@ import {
     Inject,
     Param,
     Post,
-    Req,
     UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import { EventServiceToken } from '../../common/constants/token.constants';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -20,7 +20,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 
 @ApiTags('Event')
 @Controller('events')
-@UseGuards(RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class EventController {
     constructor(
         @Inject(EventServiceToken) private readonly eventService: IEventService,
@@ -33,12 +33,9 @@ export class EventController {
     })
     async createEvent(
         @Body() createEventDto: CreateEventDto,
-        @Req() request: Request & { user: { id: string } }, // ! 타입 다시 확인
+        @GetUser() user: any, // ! 타입 다시 확인
     ): Promise<IEventWithId> {
-        return await this.eventService.createEvent(
-            createEventDto,
-            request.user.id,
-        );
+        return await this.eventService.createEvent(createEventDto, user.sub);
     }
 
     @Get()

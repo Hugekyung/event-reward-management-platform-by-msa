@@ -32,7 +32,6 @@ export class CreateEventDto {
     conditions: {
         type: EventType;
         description: string;
-        config: Record<string, any>;
     };
 
     @ApiProperty({ description: '보상 ID 목록' })

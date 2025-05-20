@@ -15,6 +15,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { JwtStrategy } from '../../common/auth/jwt.strategy';
 import {
     EventRepositoryToken,
     EventRewardMappingRepositoryToken,
@@ -88,6 +89,7 @@ import { RewardService } from './reward.service';
             provide: EventRewardMappingRepositoryToken,
             useClass: EventRewardMappingRepository,
         },
+        JwtStrategy,
     ],
 })
 export class RewardModule {}

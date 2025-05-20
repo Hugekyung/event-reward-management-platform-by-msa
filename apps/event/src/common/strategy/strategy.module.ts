@@ -27,9 +27,8 @@ import { AttendanceStrategy } from './login-event.strategy';
             provide: EventConditionStrategyTokenMap,
             useFactory: (attendanceStrategy: AttendanceStrategy) => ({
                 [EventType.LOGIN_FIRST_TIME]: attendanceStrategy,
-                // [EventType.DAILY_QUEST]: questStrategy,
             }),
-            inject: [AttendanceStrategy], // 다른 전략들...
+            inject: [AttendanceStrategy],
         },
         EventConditionContext,
         {

@@ -9,14 +9,14 @@ export class ProxyService implements IProxyService {
     async forwardRequest(req: Request, res: Response): Promise<void> {
         const route = mappingRoute(req.path);
         if (!route) {
-            res.status(404).send('Proxy target not found');
+            res.status(404).send('요청한 경로를 찾을 수 없습니다.');
             return;
         }
 
         console.log(1, req.path.replace('/api', '')); //debug
         return createProxyMiddleware({
             // target: route.target,
-            target: 'http://localhost:3001', // debug
+            target: 'http://localhost:3002', // debug
             changeOrigin: true,
             pathRewrite: (path) => path.replace('/api', ''),
             proxyTimeout: 50000,

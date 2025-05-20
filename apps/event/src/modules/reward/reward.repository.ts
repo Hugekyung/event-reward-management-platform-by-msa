@@ -17,14 +17,6 @@ export class RewardRepository implements IRewardRepository {
         private readonly rewardModel: Model<RewardDocument>,
     ) {}
 
-    private resolveModel(type: RewardType): Model<any> {
-        const discriminator = this.rewardModel.discriminators?.[type];
-        if (!discriminator) {
-            throw new BadRequestException('해당 타입에 대한 모델이 없습니다.');
-        }
-        return discriminator;
-    }
-
     async create(type: RewardType, data: any): Promise<IRewardWithId> {
         const model = this.resolveModel(type);
         return await model.create(data);
@@ -43,5 +35,16 @@ export class RewardRepository implements IRewardRepository {
     async findByEventId(eventId: string): Promise<IRewardWithId | null> {
         const reward = await this.rewardModel.findOne({ eventId }).lean();
         return toRewardResponseDto(reward);
+    }
+
+    private resolveModel(type: RewardType): Model<any> {
+        console.log(type); //debug
+        console.log(Object.keys(this.rewardModel.discriminators ?? {}));
+        const discriminator = this.rewardModel.discriminators?.[type];
+        console.log(discriminator); //debug
+        if (!discriminator) {
+            throw new BadRequestException('해당 타입에 대한 모델이 없습니다.');
+        }
+        return discriminator;
     }
 }

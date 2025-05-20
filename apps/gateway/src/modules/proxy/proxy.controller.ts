@@ -1,7 +1,6 @@
 import { All, Controller, Inject, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { JwtAuthGuard } from '../../auth/jwt/jwt-auth.guard';
-import { RolesGuard } from '../../auth/role/role.guard';
 import {
     IProxyService,
     IProxyServiceToken,
@@ -24,7 +23,7 @@ export class ProxyController {
     }
 
     @All('{*splat}')
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtAuthGuard)
     async handleRequest(
         @Req() request: Request,
         @Res() response: Response,

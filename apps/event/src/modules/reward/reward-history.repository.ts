@@ -1,4 +1,7 @@
-import { IRewardHistoryWithId } from '@libs/database/interface/reward-history.interface';
+import {
+    IRewardHistory,
+    IRewardHistoryWithId,
+} from '@libs/database/interface/reward-history.interface';
 import {
     toRewardHistoriesResponseDto,
     toRewardHistoryResponseDto,
@@ -7,6 +10,7 @@ import {
     RewardHistory,
     RewardHistoryDocument,
 } from '@libs/database/schemas/reward-history.schema';
+import { RewardHistoryStatus } from '@libs/enum/reward-history-status.enum';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -35,14 +39,19 @@ export class RewardHistoryRepository implements IRewardHistoryRepository {
         return await this.model.countDocuments(query);
     }
 
-    // ! 타입 설정하기!
-    async create(rewardHistoryObject): Promise<IRewardHistoryWithId> {
+    async create(
+        rewardHistoryObject: IRewardHistory,
+    ): Promise<IRewardHistoryWithId> {
         const histories = await this.model.create(rewardHistoryObject);
         return toRewardHistoryResponseDto(histories);
     }
 
     async exists(userId: string, eventId: string): Promise<boolean> {
-        const exists = await this.model.exists({ userId, eventId });
+        const exists = await this.model.exists({
+            userId,
+            eventId,
+            status: RewardHistoryStatus.SUCCESS,
+        });
         return exists ? true : false;
     }
 }

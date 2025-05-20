@@ -124,21 +124,29 @@ GET  http://localhost:3000/api/reward/histories
 
 ---
 
-### 2. 회원가입 API 분리
+### 2. Gateway 역할 및 인증/인가 처리
+
+- **문제**: Gateway 서버에서 JWT 인증과 역할 기반 인가를 어디까지 처리할 것인가
+- **해결**: JWT 토큰은 Gateway에서 검증(`JwtAuthGuard`)되며, 역할(Role) 기반 접근 제어(`RolesGuard`)는 각 서비스에서 수행하도록 처리
+    - MSA 구조에서 각 도메인의 책임을 분리하기 위함
+
+---
+
+### 3. 회원가입 API 분리
 
 - **문제**: 일반 유저와 관리자 유저 가입 구분 필요
 - **해결**: `/register`, `/register-admin` API 분리 및 초대 코드(INVITE_CODE) 기반으로 관리자 검증
 
 ---
 
-### 3. 공통 모듈 관리
+### 4. 공통 모듈 관리
 
 - **문제**: 공통 타입, DTO, 인터페이스 등 중복
 - **해결**: `libs/` 디렉터리에 모듈화 (예: `@libs/database`, `@libs/shared/jwt`)
 
 ---
 
-### 4. JWT 처리
+### 5. JWT 처리
 
 - **문제**: Access/RefreshToken 처리 방식 결정
 - **해결**:
@@ -147,28 +155,28 @@ GET  http://localhost:3000/api/reward/histories
 
 ---
 
-### 5. MSA 구조에서 DB 분리
+### 6. MSA 구조에서 DB 분리
 
 - **문제**: 단일 DB 구조를 어떻게 서비스별로 나눌지
 - **해결**: Mongo 컨테이너를 서비스별로 분리하여 독립 운영 (`auth-mongo`, `event-mongo`)
 
 ---
 
-### 6. 역할(Role) 기반 접근 제어
+### 7. 역할(Role) 기반 접근 제어
 
 - **문제**: 관리자만 이벤트 생성 가능해야 함
 - **해결**: `@Roles()` + `RolesGuard`로 Event 서버 내에서 역할별 접근 제어 수행
 
 ---
 
-### 7. 보상 스키마 분리
+### 8. 보상 스키마 분리
 
 - **문제**: 보상 타입별 구조가 너무 다름 (포인트, 쿠폰 등)
 - **해결**: Mongoose Discriminator 패턴을 활용해 타입별 서브 스키마 구성
 
 ---
 
-### 8. 이벤트 조건 구조 설계
+### 9. 이벤트 조건 구조 설계
 
 - **문제**: 조건을 코드에서 자동 판단 가능하게 표현할 방법 필요
 - **해결**: `conditions` 필드에 JSON 형태로 type, config, description 등을 명시  
@@ -176,21 +184,21 @@ GET  http://localhost:3000/api/reward/histories
 
 ---
 
-### 9. 멱등키 처리
+### 10. 멱등키 처리
 
 - **문제**: 중복 보상 지급 방지 필요
 - **해결**: Redis에 `reward:{userId}:{eventId}:{rewardId}` 형태로 key 저장 (`NX`, `EX` 옵션)
 
 ---
 
-### 10. 이벤트 조건 판단 로직 분리
+### 11. 이벤트 조건 판단 로직 분리
 
 - **문제**: 조건별 판단 로직이 복잡
 - **해결**: 이벤트 타입별로 Strategy 클래스 분리 (예: `LoginStrategy`, `InviteStrategy`)
 
 ---
 
-### 11. Gateway 외부 접근 강제
+### 12. Gateway 외부 접근 강제
 
 - **문제**: 서비스 직접 접근 가능 → 보안 문제
 - **해결**: `docker-compose.yml`에서 `ports` 제거, `expose`만 사용해 내부 통신만 허용

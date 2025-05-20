@@ -25,6 +25,6 @@ export class RewardHistory implements IRewardHistory {
 
 export const RewardHistorySchema = SchemaFactory.createForClass(RewardHistory);
 RewardHistorySchema.index(
-    { userId: 1, eventId: 1, rewardId: 1 },
+    { userId: 1, eventId: 1, rewardId: 1, status: 1 },
     { unique: true },
 );

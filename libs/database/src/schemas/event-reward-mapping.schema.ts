@@ -11,7 +11,7 @@ export class EventRewardMapping {
     @Prop({ type: Types.ObjectId, ref: 'Reward', required: true })
     rewardId: Types.ObjectId;
 
-    @Prop({ required: true })
+    @Prop({ required: true, default: 0 })
     quantity: number;
 }
 

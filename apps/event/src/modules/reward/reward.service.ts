@@ -3,7 +3,12 @@ import {
     IRewardWithId,
 } from '@libs/database/interface/reward.interface';
 import { EventType } from '@libs/enum/event-type.enum';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ConflictException,
+    Inject,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import {
     EventRepositoryToken,
     EventRewardMappingRepositoryToken,
@@ -51,11 +56,14 @@ export class RewardService implements IRewardService {
         userId: string,
         eventId: string,
         type: EventType,
-    ): Promise<void> {
+    ): Promise<{ message: string }> {
         const event = await this.eventRepository.findById(eventId);
         if (!event) {
             throw new NotFoundException('이벤트를 찾을 수 없습니다.');
         }
+
+        // * 이미 지급 받았는지 확인
+        await this.checkAlreadyRewarded(userId, eventId);
 
         // * 조건 검증 + 실패 기록
         try {
@@ -71,7 +79,10 @@ export class RewardService implements IRewardService {
         }
 
         // * 보상 조회
-        const reward = await this.rewardRepository.findByEventId(eventId);
+        const reward =
+            await this.eventRewardMappingRepository.findRewardByEventId(
+                eventId,
+            );
         if (!reward) {
             const reason = '이벤트에 연결된 보상이 없습니다.';
             const rewardHistoryObject = RewardHistoryFactory.createFailure(
@@ -89,16 +100,30 @@ export class RewardService implements IRewardService {
         const rewardHistoryObject = RewardHistoryFactory.createSuccess(
             userId,
             eventId,
-            reward._id.toString(), // ! id 타입 일치시키기
+            reward._id.toString(),
         );
         await this.rewardHistoryRepository.create(rewardHistoryObject);
 
         // * 보상 수량 증가
         await this.eventRewardMappingRepository.increaseQuantity(
             eventId,
-            reward._id.toString(), // ! id 타입 일치시키기
+            reward._id.toString(),
         );
 
-        // ! return 추가하기
+        return {
+            message: `${event.name} 이벤트에 대한 ${reward.name} 요청 및 지급이 완료되었습니다.`,
+        };
+    }
+
+    async checkAlreadyRewarded(userId: string, eventId: string): Promise<void> {
+        const isAlreadyRewarded = await this.rewardHistoryRepository.exists(
+            userId,
+            eventId,
+        );
+        if (isAlreadyRewarded) {
+            throw new ConflictException(
+                '이미 해당 이벤트 보상을 수령하셨습니다.',
+            );
+        }
     }
 }

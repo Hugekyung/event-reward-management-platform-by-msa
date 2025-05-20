@@ -78,7 +78,9 @@ export class AuthService implements IAuthService {
             !user ||
             !(await PasswordUtil.verify(dto.password, user.password))
         ) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException(
+                '이메일 또는 비밀번호가 일치하지 않습니다.',
+            );
         }
 
         // * 로그인 카운트 증가

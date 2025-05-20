@@ -1,4 +1,3 @@
-import { RewardType } from '@libs/enum/reward-type.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { IBaseReward } from '../interface/reward.interface';
@@ -9,9 +8,6 @@ export type RewardDocument = Reward & Document;
 export class Reward implements IBaseReward {
     @Prop({ required: true })
     name: string;
-
-    @Prop({ required: true, enum: RewardType })
-    type: RewardType;
 
     @Prop({ required: true })
     description: string;

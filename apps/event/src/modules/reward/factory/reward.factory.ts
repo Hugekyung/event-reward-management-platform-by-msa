@@ -1,5 +1,4 @@
 import {
-    ICouponReward,
     IItemReward,
     IPointReward,
     IReward,
@@ -30,16 +29,6 @@ export class RewardFactory {
                     isActive: true,
                 };
                 return itemReward;
-            case RewardType.COUPON:
-                const couponReward: ICouponReward = {
-                    name: dto.name,
-                    type: dto.type,
-                    description: dto.description,
-                    discountAmount: +dto.discountAmount!,
-                    minimumOrderPrice: +dto.minimumOrderPrice!,
-                    isActive: true,
-                };
-                return couponReward;
             default:
                 throw new BadRequestException('알 수 없는 보상 타입입니다.');
         }

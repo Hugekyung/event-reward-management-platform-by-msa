@@ -1,22 +1,4 @@
 import { getMongoUri } from '@libs/database/config/db.config';
-import {
-    EventRewardMapping,
-    EventRewardMappingSchema,
-} from '@libs/database/schemas/event-reward-mapping.schema';
-import { Event, EventSchema } from '@libs/database/schemas/event.schema';
-import {
-    ItemReward,
-    ItemRewardSchema,
-} from '@libs/database/schemas/item-reward.schema';
-import {
-    PointReward,
-    PointRewardSchema,
-} from '@libs/database/schemas/point-reward.schema';
-import {
-    RewardHistory,
-    RewardHistorySchema,
-} from '@libs/database/schemas/reward-history.schema';
-import { Reward, RewardSchema } from '@libs/database/schemas/reward.schema';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -43,14 +25,11 @@ import { RewardModule } from './modules/reward/reward.module';
             },
             inject: [ConfigService],
         }),
-        MongooseModule.forFeature([
-            { name: Event.name, schema: EventSchema },
-            { name: Reward.name, schema: RewardSchema },
-            { name: RewardHistory.name, schema: RewardHistorySchema },
-            { name: EventRewardMapping.name, schema: EventRewardMappingSchema },
-            { name: ItemReward.name, schema: ItemRewardSchema },
-            { name: PointReward.name, schema: PointRewardSchema },
-        ]),
+        // MongooseModule.forFeature([
+        //     { name: Event.name, schema: EventSchema },
+        //     { name: RewardHistory.name, schema: RewardHistorySchema },
+        //     { name: EventRewardMapping.name, schema: EventRewardMappingSchema },
+        // ]),
         EventModule,
         RewardModule,
     ],

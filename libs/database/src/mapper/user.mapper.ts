@@ -7,5 +7,6 @@ export function toUserResponseDto(user: any): IUserWithId {
         name: user.name,
         password: user.password,
         role: user.role,
+        loginCount: user.loginCount,
     };
 }

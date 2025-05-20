@@ -10,5 +10,5 @@ export interface IRewardService {
         userId: string,
         eventId: string,
         type: EventType,
-    ): Promise<void>;
+    ): Promise<{ message: string }>;
 }

@@ -3,6 +3,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { IRewardWithId } from '../interface/reward.interface';
 
 export function toRewardResponseDto(reward: any): IRewardWithId {
+    console.log('reward >>>>', reward); //debug
     const base = {
         _id: reward._id.toString(),
         name: reward.name,
@@ -21,12 +22,6 @@ export function toRewardResponseDto(reward: any): IRewardWithId {
             return {
                 ...base,
                 itemGroupName: reward.itemGroupName,
-            };
-        case RewardType.COUPON:
-            return {
-                ...base,
-                discountAmount: reward.discountAmount,
-                minimumOrderPrice: reward.minimumOrderPrice,
             };
         default:
             throw new InternalServerErrorException(

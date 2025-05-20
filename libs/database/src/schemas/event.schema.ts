@@ -19,7 +19,7 @@ export class Event implements IEvent {
     @Prop({ required: true })
     endDate: Date;
 
-    @Prop({ default: false })
+    @Prop({ default: true })
     isActive: boolean;
 
     @Prop({ required: true })

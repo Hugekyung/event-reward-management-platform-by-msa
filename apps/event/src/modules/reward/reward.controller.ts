@@ -8,15 +8,18 @@ import {
     Param,
     Post,
     Query,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'libs/shared/get-user.decorator';
+import { JwtAuthGuard } from '../../common/auth/jwt-auth.guard';
 import {
     RewardHistoryServiceToken,
     RewardServiceToken,
 } from '../../common/constants/token.constants';
 import { Roles } from '../../common/decorators/role.decorator';
+import { RolesGuard } from '../../common/guards/roles.guard';
 import { RewardIdempotencyInterceptor } from '../../common/interceptor/reward-idempotency.interceptor';
 import { IRewardHistoryService } from '../../common/interface/reward-history-service.interface';
 import { IRewardService } from '../../common/interface/reward-service.interface';
@@ -29,6 +32,7 @@ import { RequestRewardDto } from './dto/request-reward.dto';
 
 @ApiTags('Reward')
 @Controller('rewards')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class RewardController {
     constructor(
         @Inject(RewardServiceToken)
@@ -39,9 +43,11 @@ export class RewardController {
 
     @Post()
     @ApiOperation({ summary: '이벤트 보상 신규 등록' })
+    @Roles(UserRole.OPERATOR, UserRole.ADMIN)
     async createReward(
         @Body() createRewardDto: CreateRewardDto,
     ): Promise<IRewardWithId> {
+        console.log(1, createRewardDto); //debug
         return await this.rewardService.createReward(createRewardDto);
     }
 
@@ -77,17 +83,17 @@ export class RewardController {
     }
 
     @Post('request')
-    // @UseGuards()
     @UseInterceptors(RewardIdempotencyInterceptor)
     @ApiOperation({ summary: '유저의 이벤트 보상 요청' })
     async requestReward(
-        @GetUser() user: { _id: string; role: string },
-        @Body() dto: RequestRewardDto,
-    ) {
+        @GetUser() user: { sub: string; role: string },
+        @Body() requestRewardDto: RequestRewardDto,
+    ): Promise<{ message: string }> {
+        console.log(user, requestRewardDto); //debug
         return await this.rewardService.requestReward(
-            user._id,
-            dto.eventId,
-            dto.type,
+            user.sub,
+            requestRewardDto.eventId,
+            requestRewardDto.type,
         );
     }
 }
