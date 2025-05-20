@@ -18,4 +18,4 @@ import { ProxyModule } from './modules/proxy/proxy.module';
     controllers: [ProxyController],
     providers: [JwtStrategy, JwtAuthGuard, RolesGuard],
 })
-export class GatewayModule {}
+export class AppModule {}

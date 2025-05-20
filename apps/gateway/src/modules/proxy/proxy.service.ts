@@ -2,18 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { IProxyService } from '../../common/interface/proxy.service.interface';
-import { mappingTargetAPI } from '../../config/http-proxy.config';
+import { mappingRoute } from '../../config/http-proxy.config';
 
 @Injectable()
 export class ProxyService implements IProxyService {
-    constructor() {}
-
     async forwardRequest(req: Request, res: Response): Promise<void> {
-        const target = mappingTargetAPI(req.path);
-        return createProxyMiddleware({ target, changeOrigin: true })(
-            req,
-            res,
-            () => {},
-        );
+        const route = mappingRoute(req.path);
+        if (!route) {
+            res.status(404).send('Proxy target not found');
+            return;
+        }
+
+        console.log(1, req.path.replace('/api', '')); //debug
+        return createProxyMiddleware({
+            // target: route.target,
+            target: 'http://localhost:3001', // debug
+            changeOrigin: true,
+            pathRewrite: (path) => path.replace('/api', ''),
+            proxyTimeout: 50000,
+        })(req, res, () => {});
     }
 }

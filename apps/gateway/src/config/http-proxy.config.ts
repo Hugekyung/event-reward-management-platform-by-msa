@@ -4,7 +4,14 @@ const routeMap = [
     { prefix: '/api/events', target: 'http://event:3002' },
 ];
 
-export const mappingTargetAPI = (path: string): string => {
+export const mappingRoute = (
+    path: string,
+):
+    | {
+          prefix: string;
+          target: string;
+      }
+    | undefined => {
     const route = routeMap.find((r) => path.startsWith(r.prefix));
-    return route?.target || 'http://default';
+    return route;
 };

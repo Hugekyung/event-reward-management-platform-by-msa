@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { IProxyServiceToken } from '../../common/interface/proxy.service.interface';
-import { ProxyController } from './proxy.controller';
 import { ProxyService } from './proxy.service';
 
 @Module({
-    controllers: [ProxyController],
+    // controllers: [ProxyController],
     providers: [
         {
             provide: IProxyServiceToken,
