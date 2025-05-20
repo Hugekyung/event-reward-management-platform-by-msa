@@ -77,9 +77,9 @@ libs/
 - **MSA + Monorepo 구조**: 서버별 책임 분리 + 공통 코드 공유
 - **interface + token 기반 DI**: 의존성 분리 및 테스트 용이성 확보
 - **Factory + Strategy 패턴**: 이벤트 조건별 로직 처리
-- **Mongoose Discriminator**: Reward 스키마 확장에 최적
-- **Redis 멱등성 처리**: 보상 중복 방지 및 안전성 확보
-- **Swagger 적용**: 모든 API에 명세 자동화
+- **Mongoose Discriminator**: Reward 스키마 확장 용이성 확보
+- **Redis &멱등키 기반 멱등성 처리**: 보상 중복 방지 및 안전성 확보
+- **Swagger 적용**: 상세한 API 명세 추가로 협업 효율성 확보
 
 ---
 
@@ -99,14 +99,6 @@ http://localhost:3000/api-docs
 
 - **모든 요청은 Gateway(3000)로 진입**
 - Swagger 문서 또는 Postman으로 테스트
-
-```bash
-POST http://localhost:3000/api/auth/register
-POST http://localhost:3000/api/auth/login
-POST http://localhost:3000/api/event/events
-POST http://localhost:3000/api/reward/request
-GET  http://localhost:3000/api/reward/histories
-```
 
 ---
 
@@ -131,7 +123,9 @@ GET  http://localhost:3000/api/reward/histories
 ### 2. Gateway 역할 및 인증/인가 처리
 
 - **문제**: Gateway 서버에서 JWT 인증과 역할 기반 인가를 어디까지 처리할 것인가
-- **해결**: JWT 토큰은 Gateway에서 검증(`JwtAuthGuard`)되며, 역할(Role) 기반 접근 제어(`RolesGuard`)는 각 서비스에서 수행하도록 처리
+- **해결**:
+    - 구조 상 Gateway 서버가 서비스 서버의 Role 정책에 대해 알 수 없으므로 인가 처리는 각 서비스 서버에 위임
+    - 즉, JWT 토큰은 Gateway에서 검증(`JwtAuthGuard`)되며, 역할(Role) 기반 접근 제어(`RolesGuard`)는 각 서비스에서 수행하도록 처리
     - MSA 구조에서 각 도메인의 책임을 분리하기 위함
 
 ---
@@ -145,8 +139,10 @@ GET  http://localhost:3000/api/reward/histories
 
 ### 4. 공통 모듈 관리
 
-- **문제**: 공통 타입, DTO, 인터페이스 등 중복
-- **해결**: `libs/` 디렉터리에 모듈화 (예: `@libs/database`, `@libs/shared/jwt`)
+- **문제**: 공통 타입, DTO, 인터페이스 등 중복 이슈
+- **해결**
+    - NestJS MonoRepo 구조 사용
+    - `libs/` 디렉터리에 모듈화 (예: `@libs/database`, `@libs/shared/jwt`)
 
 ---
 

@@ -1,12 +1,13 @@
 import { UserRole } from '@libs/enum/user-role.enum';
 import { UnauthorizedException } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { IJwtService } from '../../../common/interface/jwt-service.interface';
 import { IUserRepository } from '../../../common/interface/user-repository.interface';
 import { PasswordUtil } from '../../../common/utils/password.util';
 import { AuthService } from '../auth.service';
 import { LoginUserDto } from '../dto/login-user.dto';
 
-jest.mock('../../common/utils/password.util');
+jest.mock('../../../common/utils/password.util');
 
 describe('AuthService', () => {
     let authService: AuthService;
@@ -14,7 +15,7 @@ describe('AuthService', () => {
     let jwtService: jest.Mocked<IJwtService>;
 
     const mockUser = {
-        _id: '1',
+        _id: new Types.ObjectId(),
         email: 'test@example.com',
         password: 'hashed-password',
         name: '양해찬',
@@ -26,20 +27,26 @@ describe('AuthService', () => {
             findByEmail: jest.fn(),
             findById: jest.fn(),
             create: jest.fn(),
-        };
+            existsByEmail: jest.fn(),
+            increaseLoginCount: jest.fn(),
+        } as any;
 
         jwtService = {
             issueTokens: jest.fn(),
             storeRefreshToken: jest.fn(),
             verifyRefreshToken: jest.fn(),
             validateRefreshToken: jest.fn(),
-        };
+        } as any;
 
-        authService = new AuthService(userRepository, jwtService);
+        authService = new AuthService(
+            undefined as any,
+            userRepository,
+            jwtService,
+        );
     });
 
-    describe('login API', () => {
-        it('비밀번호가 틀리면 UnauthorizedException가 발생한다', async () => {
+    describe('login', () => {
+        it('비밀번호가 틀리면 UnauthorizedException을 던진다', async () => {
             userRepository.findByEmail.mockResolvedValue(mockUser);
             (PasswordUtil.verify as jest.Mock).mockResolvedValue(false);
 
@@ -48,12 +55,12 @@ describe('AuthService', () => {
                 password: 'wrong',
             };
 
-            const result = await authService.login(dto);
-
-            expect(result).rejects.toThrow(UnauthorizedException);
+            await expect(authService.login(dto)).rejects.toThrow(
+                UnauthorizedException,
+            );
         });
 
-        it('로그인 성공 시 토큰 발급 및 저장한다', async () => {
+        it('로그인 성공 시 토큰을 발급하고 저장한다', async () => {
             userRepository.findByEmail.mockResolvedValue(mockUser);
             (PasswordUtil.verify as jest.Mock).mockResolvedValue(true);
             jwtService.issueTokens.mockReturnValue({
@@ -77,23 +84,24 @@ describe('AuthService', () => {
         });
     });
 
-    describe('refreshToken API', () => {
-        it('refreshToken 검증 실패 시 UnauthorizedException가 발생한다', async () => {
+    describe('refreshToken', () => {
+        it('유효하지 않은 refreshToken이면 UnauthorizedException을 던진다', async () => {
             jwtService.verifyRefreshToken.mockImplementation(() => {
                 throw new UnauthorizedException();
             });
 
-            const result = await authService.refreshToken('invalid');
-
-            expect(result).rejects.toThrow(UnauthorizedException);
+            await expect(authService.refreshToken('invalid')).rejects.toThrow(
+                UnauthorizedException,
+            );
         });
 
-        it('refreshToken 검증에 성공하면 새로운 access/refresh 토큰을 발급한다', async () => {
+        it('refreshToken이 유효하면 새로운 토큰을 발급한다', async () => {
             jwtService.verifyRefreshToken.mockReturnValue({
-                sub: mockUser._id,
+                sub: mockUser._id.toString(),
                 email: mockUser.email,
                 role: mockUser.role,
             });
+
             jwtService.validateRefreshToken.mockResolvedValue();
             userRepository.findById.mockResolvedValue(mockUser);
             jwtService.issueTokens.mockReturnValue({
