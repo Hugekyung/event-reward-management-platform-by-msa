@@ -28,10 +28,14 @@ export class RewardHistoryRepository implements IRewardHistoryRepository {
         options: { skip: number; limit: number; sort: any },
     ): Promise<IRewardHistoryWithId[]> {
         const histories = await this.model
-            .find(query, null, options)
+            .find(query)
+            .sort(options.sort)
+            .skip(options.skip)
+            .limit(options.limit)
             .populate('eventId', 'name')
             .populate('rewardId')
             .lean();
+
         return toRewardHistoriesResponseDto(histories);
     }
 

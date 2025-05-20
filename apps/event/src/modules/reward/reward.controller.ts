@@ -69,10 +69,10 @@ export class RewardController {
     @Roles(UserRole.USER)
     @ApiOperation({ summary: '본인의 이벤트 보상 요청 내역 확인(일반 유저)' })
     getMyRewardHistories(
-        @GetUser() user: any, // ! 타입
+        @GetUser() user: { sub: string; role: string },
         @Query() filter: RewardHistoryFilterDto,
     ) {
-        return this.service.findHistories(user._id, user.role, filter);
+        return this.service.findHistories(user.sub, user.role, filter);
     }
 
     @Get('histories')

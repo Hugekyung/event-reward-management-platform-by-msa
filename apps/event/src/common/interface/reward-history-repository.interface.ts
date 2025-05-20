@@ -6,7 +6,7 @@ import {
 export interface IRewardHistoryRepository {
     findHistories(
         query: Record<string, any>,
-        options: any,
+        options: { skip: number; limit: number; sort: any },
     ): Promise<IRewardHistoryWithId[]>;
     count(query: Record<string, any>): Promise<number>;
     create(rewardHistoryObject: IRewardHistory): Promise<IRewardHistoryWithId>;

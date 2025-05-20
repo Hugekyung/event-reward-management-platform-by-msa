@@ -1,4 +1,5 @@
 import { RewardHistoryStatus } from '@libs/enum/reward-history-status.enum';
+import { SortOrder } from '@libs/enum/sort-order.enum';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsMongoId, IsOptional, Min } from 'class-validator';
@@ -34,12 +35,12 @@ export class RewardHistoryFilterDto {
         default: 1,
     })
     @IsOptional()
-    @IsInt()
-    sort?: number = 1; // ! 최신 순, 오래된 순 => ENUM 으로 관리?
+    @IsEnum(SortOrder)
+    sort?: SortOrder = SortOrder.RECENT;
 }
 
 export class AdminRewardHistoryFilterDto extends RewardHistoryFilterDto {
     @ApiPropertyOptional()
     @IsMongoId()
-    userId?: string; // 특정 유저 이력 조회
+    userId?: string;
 }
