@@ -48,9 +48,9 @@ libs/
 - Auth
     - 로그인 & JWT 발급 (`POST /auth/login`)
     - access token 재발급 (`POST /auth/refresh`)
+    - 일반 유저 등록 (`POST /auth/register`)
+    - 관리자 유저 등록 (`POST /auth/register-admin`)
 - User
-    - 일반 유저 등록 (`POST /users/register`)
-    - 관리자 유저 등록 (`POST /users/register-admin`)
     - 첫 로그인 여부 확인 (`GET /users/:userId/attendance-check`)
 
 ### ✅ 이벤트 (Event Server)
