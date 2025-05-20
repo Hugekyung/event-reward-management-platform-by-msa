@@ -104,7 +104,6 @@ $ docker-compose up --build -d
 - `@GetUser()` 데코레이터로 JWT 유저 정보 추출
 - JWT 발급/검증 로직은 `libs/shared/jwt`에서 전역 관리
 - RedisService도 전역 `libs/redis`에서 관리
-- 테스트 코드: 핵심 기능(Auth, 보상 요청 등) 단위 테스트 작성
 
 ---
 
